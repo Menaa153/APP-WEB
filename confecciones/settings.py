@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-@bxff9!jv^@p*24#e*^9o6gs53b)-ixwc%!$@mc8d7^s(h(nv9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
+ALLOWED_HOSTS = ['.vercel.app',
     'https://vercel.com/cristians-projects-c48b555a/confecciones_leidy/HpAaRLYYWBgBkvpz2E94UMZwPn1R',
     'https://confeccionesleidy-jpwx7unbl-cristians-projects-c48b555a.vercel.app',
     'https://confeccionesleidy-4oz42gout-cristians-projects-c48b555a.vercel.app',

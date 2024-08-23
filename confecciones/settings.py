@@ -30,6 +30,9 @@ SECRET_KEY = 'django-insecure-@bxff9!jv^@p*24#e*^9o6gs53b)-ixwc%!$@mc8d7^s(h(nv9
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    'https://vercel.com/cristians-projects-c48b555a/confecciones_leidy/HpAaRLYYWBgBkvpz2E94UMZwPn1R',
+    'https://confeccionesleidy-jpwx7unbl-cristians-projects-c48b555a.vercel.app',
+    'https://confeccionesleidy-4oz42gout-cristians-projects-c48b555a.vercel.app',
     'confeccionesleidy-pk0zgj19e-cristians-projects-c48b555a.vercel.app',
     'localhost',
     '127.0.0.1',
@@ -46,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'core',
 ]
 
 MIDDLEWARE = [

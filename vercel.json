@@ -1,8 +1,6 @@
 {
+    "version": 2,
     "routes": [
-        {
-        "src": "/(.*)",
-        "dest": "/manage.py"
-        }
+        { "src": "/(.*)", "dest": "manage.py" }
     ]
     }

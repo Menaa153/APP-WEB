@@ -1,0 +1,20 @@
+<!-- templates/home.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+</head>
+<body>
+    <h1>Bienvenido</h1>
+    <h1>{{ user.first_name }} {{user.last_name}}</h1>
+    <a href="{% url 'ver_inventario' %}" style="padding: 10px 20px; background-color: blue; color: white; text-decoration: none; border-radius: 5px;">
+        Ver Inventario
+    </a>
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Cerrar Sesión">
+    </form>
+</body>
+</html>

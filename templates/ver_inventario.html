@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario</title>
+</head>
+<body>
+    <h1>Inventario de Productos</h1>
+
+    <!-- Botón para agregar producto -->
+    <a href="{% url 'registrar_inventario' %}"><button>Agregar Producto</button></a>
+    
+    <!-- Formulario para buscar un producto -->
+    <h2>Buscar Producto</h2>
+    <form action="{% url 'buscar_producto' %}" method="post">
+        {% csrf_token %}
+        <label for="codigo_prenda">Código de Prenda:</label>
+        <input type="text" id="codigo_prenda" name="codigo_prenda" required>
+        <button type="submit">Buscar</button>
+    </form>
+    
+    <!-- Formulario para editar o eliminar un producto -->
+    {% if producto %}
+    <h2>Editar o Eliminar Producto</h2>
+    <form action="{% url 'editar_eliminar_producto' producto.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{ producto.id }}">
+        <label for="sede">Sede:</label>
+        <input type="text" id="sede" name="sede" value="{{ producto.sede }}" required><br>
+        <label for="codigo_prenda">Código de Prenda:</label>
+        <input type="text" id="codigo_prenda" name="codigo_prenda" value="{{ producto.codigo_prenda }}" readonly><br>
+        <label for="tipo">Tipo:</label>
+        <input type="text" id="tipo" name="tipo" value="{{ producto.tipo }}" required><br>
+        <label for="talla">Talla:</label>
+        <input type="text" id="talla" name="talla" value="{{ producto.talla }}" required><br>
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" id="cantidad" name="cantidad" value="{{ producto.cantidad }}" required><br>
+        <label for="precio_unidad">Precio por Unidad:</label>
+        <input type="number" step="0.01" id="precio_unidad" name="precio_unidad" value="{{ producto.precio_unidad }}" required><br>
+        <button type="submit" name="accion" value="actualizar">Actualizar</button>
+        <button type="submit" name="accion" value="eliminar">Eliminar</button>
+    </form>
+    {% endif %}
+    
+    <h2>Lista de Productos</h2>
+    <table border="1">
+        <tr>
+            <th>Sede</th>
+            <th>Código de Prenda</th>
+            <th>Tipo</th>
+            <th>Talla</th>
+            <th>Cantidad</th>
+            <th>Precio por Unidad</th>
+        </tr>
+        {% for producto in inventario %}
+        <tr>
+            <td>{{ producto.sede }}</td>
+            <td>{{ producto.codigo_prenda }}</td>
+            <td>{{ producto.tipo }}</td>
+            <td>{{ producto.talla }}</td>
+            <td>{{ producto.cantidad }}</td>
+            <td>{{ producto.precio_unidad }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

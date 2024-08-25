@@ -1,8 +1,12 @@
 from django.db import models
+from django.contrib.auth.models import User
+
+
 
 # Create your models here.
 
 class Inventario(models.Model):
+    sede = models.CharField(max_length=100, unique=True)
     codigo_prenda = models.CharField(max_length=100, unique=True)
     tipo = models.CharField(max_length=50)
     talla = models.CharField(max_length=10)

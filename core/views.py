@@ -3,12 +3,10 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
-from django.shortcuts import render
 
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Inventario, HistorialVentas, Venta
 
-from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth import logout
@@ -20,11 +18,10 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db import IntegrityError
 from xhtml2pdf import pisa
+
 from io import BytesIO
 from django.template.loader import render_to_string  # Asegúrate de tener esta línea
 from django.core.mail import send_mail
-
-
 from django.conf import settings
 
 

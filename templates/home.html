@@ -12,6 +12,11 @@
     <a href="{% url 'ver_inventario' %}" style="padding: 10px 20px; background-color: blue; color: white; text-decoration: none; border-radius: 5px;">
         Ver Inventario
     </a>
+
+    <a href="{% url 'registrar_venta' %}"> <button>Registrar Venta</button> </a>
+
+    <a href="{% url 'generar_recibo' %}"> <button>Generar recibo de pago</button></a>
+
     <form action="{% url 'logout' %}" method="post">
         {% csrf_token %}
         <input type="submit" value="Cerrar Sesión">

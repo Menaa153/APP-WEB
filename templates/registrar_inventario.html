@@ -4,20 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Inventario</title>
-    <script>
-        function mostrarMensaje() {
-            alert("Registro exitoso!");
-            setTimeout(function() {
-                window.location.href = "{% url 'ver_inventario' %}";
-            }, 1000); // Redirige después de 1 segundo
-        }
-    </script>
 </head>
-<body onload="{% if success %}mostrarMensaje(){% endif %}">
+<body>
     <h1>Registro de Inventario</h1>
-
+    
+    <!-- Mostrar mensaje de éxito si el registro fue exitoso -->
+    {% if success %}
+        <p style="color: green;">¡Registro exitoso!</p>
+    {% endif %}
+    
     <form action="{% url 'registrar_inventario' %}" method="post">
         {% csrf_token %}
+        
         <label for="sede">Sede:</label>
         <input type="text" id="sede" name="sede" required><br>
 
@@ -38,5 +36,10 @@
         
         <input type="submit" value="Registrar">
     </form>
+
+    <!-- Botón para volver a la página de inventario -->
+    <a href="{% url 'ver_inventario' %}">
+        <button>Volver a Inventario</button>
+    </a>
 </body>
 </html>

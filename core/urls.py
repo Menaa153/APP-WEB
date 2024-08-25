@@ -42,6 +42,9 @@ urlpatterns = [
     path('inventario/', views.ver_inventario, name='ver_inventario'),
     path('inventario/buscar/', views.buscar_producto, name='buscar_producto'),
     path('inventario/editar/<int:pk>/', views.editar_eliminar_producto, name='editar_eliminar_producto'),
+    path('registrar/venta/', views.registrar_venta, name='registrar_venta'),
+    path('recibo/<str:documento>/', views.generar_recibo, name='generar_recibo'),
+    path('generar/recibo/', views.generar_recibo, name='generar_recibo'),
 
     
     #path('', views.home_view, name='home')

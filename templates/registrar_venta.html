@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Venta</title>
+</head>
+<body>
+    <h1>Registrar Venta</h1>
+
+    {% if success %}
+        <p style="color: green;">¡Venta registrada exitosamente!</p>
+    {% endif %}
+    
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    <form action="{% url 'registrar_venta' %}" method="post">
+        {% csrf_token %}
+
+        <label for="documento">Documento:</label>
+        <input type="text" id="documento" name="documento" required><br>
+        
+        <label for="codigo_prenda">Código de Prenda:</label>
+        <input type="text" id="codigo_prenda" name="codigo_prenda" required><br>
+        
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" id="cantidad" name="cantidad" required><br>
+        
+        <label for="precio_unitario">Precio Unitario:</label>
+        <input type="number" step="0.01" id="precio_unitario" name="precio_unitario" required><br>
+        
+        <input type="submit" value="Registrar Venta">
+    </form>
+
+    <!-- Botón para volver al inventario -->
+    <a href="{% url 'ver_inventario' %}">
+        <button>Volver a Inventario</button>
+    </a>
+</body>
+</html>

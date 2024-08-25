@@ -296,7 +296,7 @@ def registrar_venta(request):
             # Actualizar la cantidad en inventario
             prenda.cantidad -= cantidad
             prenda.save()
-            verificar_inventario_bajo(prenda)
+            #verificar_inventario_bajo(prenda)
 
             # Luego crear el registro en HistorialVentas, asegurando que se relacione con la venta
             HistorialVentas.objects.create(

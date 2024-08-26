@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-@bxff9!jv^@p*24#e*^9o6gs53b)-ixwc%!$@mc8d7^s(h(nv9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['.vercel.app',
     'https://vercel.com/cristians-projects-c48b555a/confecciones_leidy/HpAaRLYYWBgBkvpz2E94UMZwPn1R',
@@ -134,7 +134,7 @@ USE_TZ = True
 
 # Directorio donde se almacenan los archivos estáticos en producción
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 
 # Directorios adicionales donde Django buscará archivos estáticos
 STATICFILES_DIRS = [

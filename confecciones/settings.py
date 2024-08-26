@@ -134,11 +134,10 @@ USE_TZ = True
 
 # Directorio donde se almacenan los archivos estáticos en producción
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Directorios adicionales donde Django buscará archivos estáticos
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'static')
 ]
 
 # Ruta para archivos de medios (si los tienes)

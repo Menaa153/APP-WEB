@@ -1,0 +1,62 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Centra verticalmente el contenido */
+    min-height: 70vh; /* Asegura que el contenido esté centrado en toda la altura de la página */
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+form {
+    text-align: center;
+    display: flex;
+    flex-direction: column; /* Alinea los elementos del formulario verticalmente */
+    align-items: center; /* Centra los elementos horizontalmente dentro del formulario */
+    margin: 0; /* Elimina el margen para centrar el formulario en el contenedor */
+}
+
+form input[type="submit"] {
+    padding: 10px 20px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block; /* Asegura que el botón ocupe el espacio de bloque */
+    margin-top: 10px; /* Añade margen superior para separar el botón de otros elementos */
+}
+
+form input[type="submit"]:hover {
+    background-color: darkred;
+}
+

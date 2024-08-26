@@ -38,7 +38,6 @@ urlpatterns = [
     #path('inventario/', views., name='detalle_venta'),
     path('registrar_inventario/', views.registrar_inventario, name='registrar_inventario'),
     path('exito/', views.exito, name='exito'),
-    path('register/', views.register, name='register'),
     path('inventario/', views.ver_inventario, name='ver_inventario'),
     path('inventario/buscar/', views.buscar_producto, name='buscar_producto'),
     path('inventario/editar/<int:pk>/', views.editar_eliminar_producto, name='editar_eliminar_producto'),

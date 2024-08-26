@@ -37,8 +37,8 @@ class SignUpView(generic.CreateView):
 def sigup(request):
     return render(request, 'signup.html')
 
-def login(request):
-    return render(request, 'login.html')
+#def login(request):
+#   return render(request, 'login.html')
 
 
 def exito(request):
@@ -159,7 +159,11 @@ def login_view(request):
 
 @login_required
 def home_view(request):
-    return render(request, 'home.html')
+    user = request.user
+    if user.last_name == 'Contador' or user.last_name == 'Modista Jefe':
+        return render(request, 'home.html')
+    else:
+        return render(request, 'home_vendedoras.html')
 
 
 
@@ -171,52 +175,26 @@ def logout_view(request):
 
 
 
-@login_required
-def inventario_general_view(request):
-    profile = request.user.profile
-    if profile.cargo in ['Contador', 'Modista Jefe']:
-        inventario = Producto.objects.all()
-        return render(request, 'inventario_general.html', {'inventario': inventario})
-    else:
-        return redirect('acceso_denegado')
-
-@login_required
-def inventario_vendedora_view(request):
-    profile = request.user.profile
-    if profile.cargo == 'Vendedora':
-        inventario = Producto.objects.filter(sede=profile.sede)
-        return render(request, 'inventario_vendedora.html', {'inventario': inventario})
-    else:
-        return redirect('acceso_denegado')
-
-
-
-
-
-def register(request):
-    if request.method == 'POST':
-        form = UserRegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            messages.success(request, f'Cuenta creada para {user.username}!')
-            return redirect('login')
-    else:
-        form = UserRegisterForm()
-    return render(request, 'register.html', {'form': form})
-
-
-
 from django.shortcuts import render
 from .models import Inventario  # Asegúrate de importar el modelo de Producto
 
+"""
 def ver_inventarioo(request):
     inventario = Inventario.objects.all()  # Recupera todos los productos del inventario
     return render(request, 'ver_inventario.html', {'inventario': inventario})
+"""
+
 
 def ver_inventario(request):
     user = request.user
     if user.last_name == 'Medellin':
-        inventario = Inventario.objects.filter(sede='Medellin')
+        inventario = Inventario.objects.filter(sede='Medellin')        
+    elif user.last_name == 'Cali':
+        inventario = Inventario.objects.filter(sede='Cali')
+    elif user.last_name == 'Cartagena':
+        inventario = Inventario.objects.filter(sede='Cartagena')
+    elif user.last_name == 'Bogota':
+        inventario = Inventario.objects.filter(sede='Bogota')
     else:
         inventario = Inventario.objects.all()  # Mostrar todo el inventario para otros cargos
     return render(request, 'ver_inventario.html', {'inventario': inventario})
@@ -239,9 +217,28 @@ def editar_inventario(request, pk):
 def buscar_producto(request):
     if request.method == 'POST':
         codigo_prenda = request.POST.get('codigo_prenda')
-        producto = Inventario.objects.filter(codigo_prenda=codigo_prenda).first()
-        return render(request, 'ver_inventario.html', {'producto': producto, 'inventario': Inventario.objects.all()})
+        user = request.user
+
+        # Filtrar inventario según la sede del usuario
+        if user.last_name == 'Medellin':
+            producto = Inventario.objects.filter(codigo_prenda=codigo_prenda, sede='Medellin').first()
+        elif user.last_name == 'Cali':
+            producto = Inventario.objects.filter(codigo_prenda=codigo_prenda, sede='Cali').first()
+        elif user.last_name == 'Cartagena':
+            producto = Inventario.objects.filter(codigo_prenda=codigo_prenda, sede='Cartagena').first()
+        elif user.last_name == 'Bogota':
+            producto = Inventario.objects.filter(codigo_prenda=codigo_prenda, sede='Bogota').first()
+        else:
+            producto = Inventario.objects.filter(codigo_prenda=codigo_prenda).first()
+
+        if producto:
+            return render(request, 'ver_inventario.html', {'producto': producto, 'inventario': [producto]})
+        else:
+            messages.error(request, "Producto no encontrado en el inventario de tu sede.")
+            return redirect('ver_inventario')
     return redirect('ver_inventario')
+
+
 
 
 def editar_eliminar_producto(request, pk):
@@ -293,7 +290,7 @@ def registrar_venta(request):
             # Actualizar la cantidad en inventario
             prenda.cantidad -= cantidad
             prenda.save()
-            #verificar_inventario_bajo(prenda)
+            
 
             # Luego crear el registro en HistorialVentas, asegurando que se relacione con la venta
             HistorialVentas.objects.create(
@@ -305,6 +302,7 @@ def registrar_venta(request):
                 fecha=timezone.now(),
                 sede=request.user.last_name
             )
+            #verificar_inventario_bajo(prenda)
 
             return render(request, 'registrar_venta.html', {'success': True})
 

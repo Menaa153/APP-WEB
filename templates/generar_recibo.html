@@ -1,9 +1,12 @@
+{% load static %}
+
 <!-- templates/generar_recibo.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <title>Generar Recibo</title>
+    <link rel="stylesheet" href="{% static 'css/generar_recibo.css' %}">
 </head>
 <body>
     <h1>Generar Recibo de Pago</h1>
@@ -16,6 +19,10 @@
     {% if error %}
     <p style="color: red;">{{ error }}</p>
     {% endif %}
+        <!-- Botón para volver a la página de inventario -->
+    <a href="{% url 'home' %}">
+        <button class="btn-inicio">Volver al Inicio</button>
+    </a
 </body>
 </html>
 

@@ -1,18 +1,87 @@
 {% load static %}
 
-<!-- templates/home.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio</title>
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
     <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Centra verticalmente el contenido */
+            min-height: 70vh; /* Asegura que el contenido esté centrado en toda la altura de la página */
+        }
 
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        form {
+            text-align: center;
+            display: flex;
+            flex-direction: column; /* Alinea los elementos del formulario verticalmente */
+            align-items: center; /* Centra los elementos horizontalmente dentro del formulario */
+            margin: 0; /* Elimina el margen para centrar el formulario en el contenedor */
+        }
+
+        form input[type="submit"] {
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block; /* Asegura que el botón ocupe el espacio de bloque */
+            margin-top: 10px; /* Añade margen superior para separar el botón de otros elementos */
+        }
+
+        form input[type="submit"]:hover {
+            background-color: darkred;
+        }
+
+        /* Estilos para el pie de página */
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
-    <h1>Confecciones Leidy - Sede {{ user.last_name }}</h1>
+    <h1>Confecciones Leidy</h1>
     
     <div class="button-container">
         <a href="{% url 'ver_inventario' %}"><button>Ver Inventario</button></a>
@@ -23,6 +92,10 @@
         {% csrf_token %}
         <input class="form input" type="submit" value="Cerrar Sesión">
     </form>
+
+    <!-- Pie de página -->
+    <div class="footer">
+        Desarrollado por: Equipo G1.13
+    </div>
 </body>
 </html>
-

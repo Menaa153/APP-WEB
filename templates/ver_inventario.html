@@ -8,30 +8,182 @@
     <title>Inventario</title>
     <link rel="stylesheet" href="{% static 'css/inventario.css' %}">
     <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
+        h1, h2 {
+            color: #343a40;
+            text-align: center;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+        }
+
+        /* Estilos para los formularios */
+        form {
+            margin-bottom: 20px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"] {
+            background-color: #28a745;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #218838;
+        }
+
+        button[name="accion"][value="eliminar"] {
+            background-color: #dc3545;
+        }
+
+        button[name="accion"][value="eliminar"]:hover {
+            background-color: #c82333;
+        }
+
+        /* Estilos para la tabla */
+        table {
+            width: 100%;
+            max-width: 800px;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        table, th, td {
+            border: 1px solid #dee2e6;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e9ecef;
+        }
+
+        /* Estilos para los mensajes */
+        .messages {
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .alert {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Botones adicionales */
+        a button {
+            background-color: #ffc107;
+        }
+
+        a button:hover {
+            background-color: #e0a800;
+        }
+
+        /* Estilos para los botones del formulario */
+        .form-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* Botón de agregar producto */
+        .button-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+                /* Estilos para el pie de página */
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
     <h1>Inventario de Productos</h1>
-    
-    <!-- Formulario para buscar un producto -->
 
+    <!-- Formulario para buscar un producto -->
     <form action="{% url 'buscar_producto' %}" method="post">
         {% csrf_token %}
         <label for="codigo_prenda">Código de Prenda:</label>
         <input type="text" id="codigo_prenda" name="codigo_prenda" required>
         <button type="submit">Buscar</button>
     </form>
-    
-    
+
     <!-- Bloque para mostrar mensajes -->
     {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div style="color: red;" class="alert {{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        </div>
+    <div class="messages">
+        {% for message in messages %}
+        <div style="color: red;" class="alert {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
     {% endif %}
-    
+
     {% if producto %}
     <h2>Editar o Eliminar Producto</h2>
     <form action="{% url 'editar_eliminar_producto' producto.id %}" method="post">
@@ -74,7 +226,7 @@
         </div>
     </form>
     {% endif %}
-    
+
     <h2>Lista de Productos</h2>
     <table border="1">
         <tr>
@@ -102,6 +254,9 @@
         <a href="{% url 'registrar_inventario' %}"><button>Agregar Producto</button></a>
         <a href="{% url 'home' %}"><button>Volver al Inicio</button></a>
     </div>
-
+    <!-- Pie de página -->
+    <div class="footer">
+        Desarrollado por: Equipo G1.13
+    </div>
 </body>
 </html>

@@ -1,14 +1,105 @@
 {% load static %}
 
-<!-- templates/generar_recibo.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <title>Generar Recibo</title>
-    <link rel="stylesheet" href="{% static 'css/generar_recibo.css' %}">
-    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
-
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        a {
+            text-decoration: none;
+            color: white;
+        }
+        /* Estilos para los formularios */
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+        button[type="submit"]:hover {
+            background-color: #218838;
+        }
+        /* Estilos para los mensajes de error */
+        p[style*="color: red;"] {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        /* Estilo para el botón "Volver al Inicio" */
+        .btn-inicio {
+            padding: 10px 20px;
+            background-color: #007bff; /* Color de fondo azul */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+            margin-top: 20px; /* Espacio superior para separar del contenido */
+            text-align: center;
+            width: 100%;
+            max-width: 200px; /* Ancho máximo del botón */
+        }
+        .btn-inicio:hover {
+            background-color: #0056b3; /* Color de fondo azul oscuro cuando se pasa el cursor */
+        }
+        a {
+            text-decoration: none;
+        }
+        /* Estilos para el pie de página */
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
     <h1>Generar Recibo de Pago</h1>
@@ -21,10 +112,13 @@
     {% if error %}
     <p style="color: red;">{{ error }}</p>
     {% endif %}
-        <!-- Botón para volver a la página de inventario -->
     <a href="{% url 'home' %}">
         <button class="btn-inicio">Volver al Inicio</button>
-    </a
+    </a>
+
+    <!-- Pie de página -->
+    <div class="footer">
+        Desarrollado por: Equipo G1.13
+    </div>
 </body>
 </html>
-

@@ -71,6 +71,13 @@
             font-size: 14px;
             margin-top: 10px;
         }
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -89,6 +96,9 @@
         {% if error_message %}
         <p class="error-message">{{ error_message }}</p>
         {% endif %}
+    </div>
+    <div class="footer">
+        Desarrollado por: Equipo G1.13
     </div>
 </body>
 </html>

@@ -16,10 +16,6 @@ Including another URLconf
 """
 from django.urls import path
 from . import views
-#from .views import SignUpView
-from django.contrib.auth import views as auth_views  # Asegúrate de importar auth_views 
-from django.contrib.auth.decorators import login_required
-
 
 
 urlpatterns = [
@@ -27,25 +23,12 @@ urlpatterns = [
     path('login/', views.login_view , name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('home/', views.home_view, name='home'),
-    path('signup/', views.sigup , name='signup'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    #path('signup/', SignUpView.as_view(), name='signup')
-    path('productos/', views.lista_productos, name='lista_productos'),
-    path('productos/crear/', views.crear_producto, name='crear_producto'),
-    #path('ventas/', views.lista_ventas, name='lista_ventas'),
-    path('ventas/crear/', views.crear_venta, name='crear_venta'),
-    path('ventas/<int:venta_id>/', views.detalle_venta, name='detalle_venta'),
-    #path('inventario/', views., name='detalle_venta'),
     path('registrar_inventario/', views.registrar_inventario, name='registrar_inventario'),
-    path('exito/', views.exito, name='exito'),
+    #path('exito/', views.exito, name='exito'),
     path('inventario/', views.ver_inventario, name='ver_inventario'),
     path('inventario/buscar/', views.buscar_producto, name='buscar_producto'),
     path('inventario/editar/<int:pk>/', views.editar_eliminar_producto, name='editar_eliminar_producto'),
     path('registrar/venta/', views.registrar_venta, name='registrar_venta'),
     path('recibo/<str:documento>/', views.generar_recibo, name='generar_recibo'),
     path('generar/recibo/', views.generar_recibo, name='generar_recibo'),
-
-    
-    #path('', views.home_view, name='home')
-
 ]

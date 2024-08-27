@@ -137,7 +137,7 @@ STATIC_URL = '/static/'
 
 # Directorios adicionales donde Django buscará archivos estáticos
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'staticfiles')
 ]
 
 # Ruta para archivos de medios (si los tienes)

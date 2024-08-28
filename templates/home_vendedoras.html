@@ -81,10 +81,10 @@
     </style>
 </head>
 <body>
-    <h1>Confecciones Leidy</h1>
+    <h1>Confecciones Leidy - Sede {{ user.last_name }} </h1>
     
     <div class="button-container">
-        <a href="{% url 'ver_inventario' %}"><button>Ver Inventario</button></a>
+        <a href="{% url 'ver_inventario_ven' %}"><button>Ver Inventario</button></a>
         <a href="{% url 'registrar_venta' %}"><button>Registrar Venta</button></a>
     </div>
     

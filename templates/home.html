@@ -81,11 +81,12 @@
     </style>
 </head>
 <body>
-    <h1>Confecciones Leidy</h1>
+    <h1>Confecciones Leidy - {{ user.last_name }} </h1>
     
     <div class="button-container">
         <a href="{% url 'ver_inventario' %}"><button>Ver Inventario</button></a>
         <a href="{% url 'registrar_venta' %}"><button>Registrar Venta</button></a>
+        <a href="{% url 'capturar_datos_cliente' %}"><button>Generar cuenta de Cobro</button></a>
         <a href="{% url 'generar_recibo' %}"><button>Generar recibo de pago</button></a>
     </div>
     

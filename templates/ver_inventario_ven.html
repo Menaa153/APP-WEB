@@ -49,7 +49,7 @@
             margin-bottom: 5px;
         }
 
-        input[type="text"], input[type="number"], select {
+        input[type="text"], input[type="number"] {
             width: 100%;
             padding: 8px;
             border: 1px solid #ced4da;
@@ -154,8 +154,7 @@
             justify-content: center;
             gap: 10px;
         }
-        
-        /* Estilos para el pie de página */
+                /* Estilos para el pie de página */
         .footer {
             position: fixed;
             bottom: 10px;
@@ -166,34 +165,14 @@
     </style>
 </head>
 <body>
-    <!-- Botón para agregar producto -->
-    <div class="button-container">
-        <a href="{% url 'registrar_inventario' %}"><button>Agregar Producto</button></a>
-        <a href="{% url 'home' %}"><button>Volver al Inicio</button></a>
-    </div>
     <h1>Inventario de Productos</h1>
 
     <!-- Formulario para buscar un producto -->
     <form action="{% url 'buscar_producto' %}" method="post">
         {% csrf_token %}
-        <label for="codigo_prenda">Código de Prenda:</label>
+        <label for="codigo_prenda">Buscar por código de Prenda:</label>
         <input type="text" id="codigo_prenda" name="codigo_prenda" required>
         <button type="submit">Buscar</button>
-    </form>
-
-    <!-- Formulario para filtrar por sede -->
-    <form action="{% url 'ver_inventario' %}" method="get">
-        <label for="sede">Filtrar por Sede:</label>
-        <select id="sede" name="sede">
-            <option value="">-- Seleccionar Sede --</option>
-            <option value="BOGOTA">BOGOTA</option>
-            <option value="CALI">CALI</option>
-            <option value="MELGAR">MELGAR</option>
-            <option value="VILLAVICENCIO">VILLAVICENCIO</option>
-            <option value="PALANQUERO">PALANQUERO</option>
-            <option value="TRECESQUINAS">TRECESQUINAS</option>
-        </select>
-        <button type="submit">Filtrar</button>
     </form>
 
     <!-- Bloque para mostrar mensajes -->
@@ -205,75 +184,33 @@
     </div>
     {% endif %}
 
-    {% if producto %}
-    <h2>Editar o Eliminar Producto</h2>
-    <form action="{% url 'editar_eliminar_producto' producto.id %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="id" value="{{ producto.id }}">
-
-        <div class="form-group">
-            <label for="sede">Sede:</label>
-            <input type="text" id="sede" name="sede" value="{{ producto.sede }}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="codigo_prenda">Código de Prenda:</label>
-            <input type="text" id="codigo_prenda" name="codigo_prenda" value="{{ producto.codigo_prenda }}" readonly>
-        </div>
-
-        <div class="form-group">
-            <label for="tipo">Tipo:</label>
-            <input type="text" id="tipo" name="tipo" value="{{ producto.tipo }}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="talla">Talla:</label>
-            <input type="text" id="talla" name="talla" value="{{ producto.talla }}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="cantidad">Cantidad:</label>
-            <input type="number" id="cantidad" name="cantidad" value="{{ producto.cantidad }}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="precio">Precio por Unidad:</label>
-            <input type="number" id="precio" name="precio" step="0.01" value="{{ producto.precio }}" required>
-        </div>
-
-        <div class="form-buttons">
-            <button type="submit" name="accion" value="editar">Actualizar Producto</button>
-            <button type="submit" name="accion" value="eliminar">Eliminar Producto</button>
-        </div>
-    </form>
-    {% endif %}
-
-    <!-- Tabla de inventario -->
-    <table>
-        <thead>
-            <tr>
-                <th>Sede</th>
-                <th>Código de Prenda</th>
-                <th>Tipo</th>
-                <th>Talla</th>
-                <th>Cantidad</th>
-                <th>Precio por Unidad</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for producto in inventario %}
-            <tr>
-                <td>{{ producto.sede }}</td>
-                <td>{{ producto.codigo_prenda }}</td>
-                <td>{{ producto.tipo }}</td>
-                <td>{{ producto.talla }}</td>
-                <td>{{ producto.cantidad }}</td>
-                <td>{{ producto.precio_unidad }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
+    <h2>Lista de Productos</h2>
+    <table border="1">
+        <tr>
+            <th>Sede</th>
+            <th>Código de Prenda</th>
+            <th>Tipo</th>
+            <th>Talla</th>
+            <th>Cantidad</th>
+            <th>Precio por Unidad</th>
+        </tr>
+        {% for producto in inventario %}
+        <tr>
+            <td>{{ producto.sede }}</td>
+            <td>{{ producto.codigo_prenda }}</td>
+            <td>{{ producto.tipo }}</td>
+            <td>{{ producto.talla }}</td>
+            <td>{{ producto.cantidad }}</td>
+            <td>{{ producto.precio_unidad }}</td>
+        </tr>
+        {% endfor %}
     </table>
 
+    <!-- Botón para agregar producto -->
+    <div class="button-container">
+        <a href="{% url 'ver_inventario_ven' %}"><button>Volver a inventario general</button></a>
+        <a href="{% url 'home' %}"><button>Volver al Inicio</button></a>
+    </div>
     <!-- Pie de página -->
     <div class="footer">
         Desarrollado por: Equipo G1.13

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datos del Cliente</title>
+</head>
+<body>
+    <h2>Datos del Cliente</h2>
+    <form method="POST" action="{% url 'capturar_datos_cliente' %}">
+        {% csrf_token %}
+        <label for="institucion">Institución:</label>
+        <input type="text" id="institucion" name="institucion" required><br><br>
+
+        <label for="nit">NIT:</label>
+        <input type="text" id="nit" name="nit" required><br><br>
+
+        <label for="direccion">Dirección:</label>
+        <input type="text" id="direccion" name="direccion" required><br><br>
+
+        <label for="municipio">Municipio:</label>
+        <input type="text" id="municipio" name="municipio" required><br><br>
+
+        <label for="departamento">Departamento:</label>
+        <input type="text" id="departamento" name="departamento" required><br><br>
+
+        <button type="submit">Guardar Datos del Cliente</button>
+    </form>
+</body>
+</html>

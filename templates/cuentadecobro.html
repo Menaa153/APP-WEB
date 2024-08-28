@@ -1,0 +1,100 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Cuenta de Cobro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header img {
+            max-width: 150px;
+            height: auto;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .header p {
+            margin: 5px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .total-row {
+            font-weight: bold;
+        }
+        .fecha {
+            text-align: right;
+            margin-right: 15px; /* ajustar el margen */
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Cuenta de Cobro</h2>
+        <p class="fecha"> Fecha, {{ fecha_creacion }}</p>
+        <p>{{ institucion }}</p><br>
+        <p>N.I.T. {{ nit }}</p>
+        <p>{{ direccion }}</p>
+        <p>{{ municipio }}, {{ departamento }}</p>
+        <h3>DEBE A:</h3>
+        <p>LEIDY JOHANA FRANCO VASQUEZ</p>
+        <p>C.C. 1121.835.283</p>
+        <p>CALLE 40E #80-09</p>
+        <P>RIONEGRO, ANTIOQUIA</P>
+    </div>
+
+    <p>POR VALOR DE: {{ total_formateado }}</p>
+    <p>POR CONCEPTO DE: {{ concepto }}</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Código producto</th>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+                <th>Valor unitario</th>
+                <th>Valor total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in productos %}
+            <tr>
+                <td>{{ p.codigo_producto }}</td>
+                <td>{{ p.descripcion }}</td>
+                <td>{{ p.cantidad|floatformat:2 }}</td>
+                <td>{{ p.valor_unitario|floatformat:2 }}</td>
+                <td>{{ p.valor_total|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+            <!-- Fila para el total a pagar -->
+            <tr class="total-row">
+                <td colspan="4" style="text-align: right;"><strong>Total a Pagar:</strong></td>
+                <td>{{ total|floatformat:2 }}</td>
+            </tr>
+        </tbody>
+    </table><br><br><br>
+    <p>Favor consignar a la cuenta <strong>Nro. 02481842126</strong> de ahorros Bancolombia</p><br><br>
+    <p> Leidy Johana Franco Vásquez<br>
+        C.C: 1.121.835.283<br>
+        Celular: 3204362815
+    </p>
+</body>
+</html>

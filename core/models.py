@@ -18,6 +18,7 @@ class Inventario(models.Model):
         return f"{self.tipo} {self.talla} ({self.codigo_prenda})"
 
 
+
 class HistorialVentas(models.Model):
     documento_comprador = models.CharField(max_length=20, null=True, blank=True)
     codigo_prenda = models.CharField(max_length=100, null=True, blank=True)
@@ -43,3 +44,23 @@ class Venta(models.Model):
 
     def __str__(self):
         return f"Venta {self.codigo_venta} - {self.codigo_prenda}"
+
+
+
+class Producto(models.Model):
+    codigo_producto = models.CharField(max_length=20)
+    descripcion = models.CharField(max_length=255)
+    cantidad = models.IntegerField()
+    valor_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.descripcion
+
+class CuentaCobro(models.Model):
+    institucion = models.CharField(max_length=255)
+    nit = models.CharField(max_length=50)
+    direccion = models.CharField(max_length=255)
+    municipio = models.CharField(max_length=255)
+    departamento = models.CharField(max_length=255)
+    fecha_creacion = models.DateField(auto_now_add=True)
+    productos = models.ManyToManyField(Producto)

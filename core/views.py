@@ -9,7 +9,6 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth import logout
 from django.contrib import messages
 from .forms import UserRegisterForm
-from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db import IntegrityError
@@ -18,9 +17,8 @@ from io import BytesIO
 from django.template.loader import render_to_string  
 from django.core.mail import send_mail
 from django.conf import settings
-from django.views.decorators.csrf import csrf_exempt
+#from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import get_template
-import csv
 from num2words import num2words
 
 
@@ -313,34 +311,6 @@ def enviar_notificacion(inventario):
 
 
 
-def importar_csv_a_bd(request):
-    if request.method == "POST" and request.FILES['csv_file']:
-        csv_file = request.FILES['csv_file']
-
-        # Asegúrate de que el archivo es un CSV
-        if not csv_file.name.endswith('.csv'):
-            return HttpResponse("El archivo no es un CSV.")
-
-        # Leer el archivo CSV
-        file_data = csv_file.read().decode("utf-8").splitlines()
-        reader = csv.DictReader(file_data)
-
-        for row in reader:
-            Inventario.objects.create(
-                sede=row['sede'],
-                codigo_prenda=row['codigo_prenda'],
-                tipo=row['tipo'],
-                talla=row['talla'],
-                cantidad=int(row['cantidad']),
-                precio_unidad=float(row['precio_unidad']),
-                umbral_inventario=int(row['umbral_inventario'])
-            )
-
-        return HttpResponse("Datos importados exitosamente.")
-
-    return render(request, 'importar_csv.html')
-
-
 
 def cuenta_cobro_form(request):
     # Obtener la lista de productos desde la sesión, o una lista vacía si no existe
@@ -397,8 +367,6 @@ def capturar_datos_cliente(request):
     return render(request, 'capturar_datos_cliente.html')
 
 
-
-@csrf_exempt
 def capturar_datos_pedido(request):
     if request.method == 'POST':
         try:
@@ -447,8 +415,7 @@ def capturar_datos_pedido(request):
 
 
 
-def confirmacion(request):
-    return render(request, 'confirmacion.html')
+
 
 
 def guardar_cuenta_cobro(request):

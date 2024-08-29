@@ -50,15 +50,17 @@
     <div class="header">
         <h2>Cuenta de Cobro</h2>
         <p class="fecha"> Fecha, {{ fecha_creacion }}</p>
-        <p>{{ institucion }}</p><br>
-        <p>N.I.T. {{ nit }}</p>
-        <p>{{ direccion }}</p>
-        <p>{{ municipio }}, {{ departamento }}</p>
+        <p>{{ institucion }}</p>
+        <p>N.I.T. {{ nit }}<br>
+            {{ direccion }}<br>
+            {{ municipio }}, {{ departamento }}
+        </p>
         <h3>DEBE A:</h3>
-        <p>LEIDY JOHANA FRANCO VASQUEZ</p>
-        <p>C.C. 1121.835.283</p>
-        <p>CALLE 40E #80-09</p>
-        <P>RIONEGRO, ANTIOQUIA</P>
+        <p>LEIDY JOHANA FRANCO VASQUEZ<br>
+            C.C. 1121.835.283<br>
+            CALLE 40E #80-09<br>
+            RIONEGRO, ANTIOQUIA
+        </p>
     </div>
 
     <p>POR VALOR DE: {{ total_formateado }}</p>
@@ -79,7 +81,7 @@
             <tr>
                 <td>{{ p.codigo_producto }}</td>
                 <td>{{ p.descripcion }}</td>
-                <td>{{ p.cantidad|floatformat:2 }}</td>
+                <td>{{ p.cantidad|floatformat:0 }}</td>
                 <td>{{ p.valor_unitario|floatformat:2 }}</td>
                 <td>{{ p.valor_total|floatformat:2 }}</td>
             </tr>

@@ -1,0 +1,156 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Cliente</title>
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        h2, h3 {
+            color: #333;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input[type="text"], button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .error, .success {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        /* Estilo del botón de volver al inicio */
+        .back-button {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .back-button:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'home' %}"><button class="back-button">Volver al Inicio</button></a>
+
+    <h1>Gestión de Clientes</h1>
+
+    <!-- Mostrar un mensaje de error si no se encuentra ningún cliente -->
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+    
+    <!-- Mostrar un mensaje de éxito -->
+    {% if messages %}
+        {% for message in messages %}
+            <p class="success">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    
+    <!-- Formulario para buscar clientes por NIT -->
+    <form method="GET" action="{% url 'gestionar_cliente' %}">
+        <label for="nit">NIT:</label>
+        <input type="text" id="nit" name="nit" required>
+        <button type="submit">Buscar</button>
+    </form>
+
+    {% if clientes %}
+        <h2>Información del Cliente</h2>
+        <p><strong>Institución:</strong> {{ clientes.0.institucion }}</p>
+        <p><strong>NIT:</strong> {{ clientes.0.nit }}</p>
+        <p><strong>Dirección:</strong> {{ clientes.0.direccion }}</p>
+        <p><strong>Municipio:</strong> {{ clientes.0.municipio }}</p>
+        <p><strong>Departamento:</strong> {{ clientes.0.departamento }}</p>
+
+        <!-- Formulario para actualizar los detalles del cliente -->
+        <h3>Actualizar Cliente</h3>
+        <form method="POST" action="{% url 'gestionar_cliente' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="edit">
+            <input type="hidden" name="nit" value="{{ clientes.0.nit }}">
+            {{ form.as_p }}
+            <button type="submit">Actualizar</button>
+        </form>
+
+        <!-- Formulario para eliminar el cliente -->
+        <h3>Eliminar Cliente</h3>
+        <form method="POST" action="{% url 'gestionar_cliente' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="nit" value="{{ clientes.0.nit }}">
+            <button type="submit" onclick="return confirm('¿Está seguro de que desea eliminar este cliente?');">Eliminar Cliente</button>
+        </form>
+    {% endif %}
+</body>
+</html>

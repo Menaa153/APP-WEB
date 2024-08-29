@@ -64,3 +64,6 @@ class CuentaCobro(models.Model):
     departamento = models.CharField(max_length=255)
     fecha_creacion = models.DateField(auto_now_add=True)
     productos = models.ManyToManyField(Producto)
+
+    def __str__(self):
+        return self.institucion

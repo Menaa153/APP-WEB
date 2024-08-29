@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, get_list_or_404
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
@@ -6,9 +6,9 @@ from django.views import generic
 from .models import Inventario, HistorialVentas, Venta, CuentaCobro, Producto
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login as auth_login
+from .forms import CuentaCobroForm
 from django.contrib.auth import logout
 from django.contrib import messages
-from .forms import UserRegisterForm
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db import IntegrityError
@@ -22,6 +22,7 @@ from django.template.loader import get_template
 from num2words import num2words
 
 
+
 def exito(request):
     return render(request, 'exito.html')
 
@@ -31,7 +32,7 @@ def login_view(request):
         email = request.POST['email']
         password = request.POST['password']
         
-        # Autenticación por email
+        #autenticación por email
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
@@ -41,7 +42,7 @@ def login_view(request):
             user = authenticate(request, username=user.username, password=password)
             if user is not None:
                 auth_login(request, user)
-                return redirect('home')  # Redirige a la página principal después de iniciar sesión
+                return redirect('home')  #redirige a la pagina principal después de iniciar sesion
             else:
                 return render(request, 'login.html', {'error_message': 'Contraseña incorrecta.'})
         else:
@@ -78,7 +79,7 @@ def registrar_inventario(request):
         precio_unidad = request.POST.get('precio_unidad')
         
         
-        # Crear un nuevo objeto Producto y guardarlo en la base de datos
+        #crear un nuevo objeto Producto y guardarlo en la base de datos
         producto = Inventario(
             sede=sede,
             codigo_prenda=codigo_prenda,
@@ -87,9 +88,9 @@ def registrar_inventario(request):
             cantidad=cantidad,
             precio_unidad=precio_unidad
         )
-        # Verificar si ya existe una prenda con el mismo código
+        #verificar si ya existe una prenda con el mismo ccdigo
         if Inventario.objects.filter(codigo_prenda=codigo_prenda).exists():
-            # Si ya existe, mostrar un mensaje de error
+            #si ya existe mostrar un mensaje de error
             return render(request, 'registrar_inventario.html', {'error': '¡Prenda ya existe!'})
         producto.save()
         
@@ -216,14 +217,14 @@ def registrar_venta(request):
         precio_total = cantidad * precio_unitario
         
         try:
-            # Obtener la prenda del inventario usando el código
+            #obtener la prenda del inventario usando el código
             prenda = Inventario.objects.get(codigo_prenda=codigo_prenda)
             
-            # Verificar si hay suficiente cantidad en inventario
+            #verificar si hay suficiente cantidad en inventario
             if prenda.cantidad < cantidad:
                 return render(request, 'registrar_venta.html', {'error': 'Cantidad insuficiente en inventario'})
             
-            # Crear la venta primero
+            #crear la venta primero
             venta = Venta.objects.create(
                 documento_comprador=documento_comprador,
                 codigo_prenda=codigo_prenda,
@@ -233,12 +234,12 @@ def registrar_venta(request):
                 sede=request.user.last_name
             )
             
-            # Actualizar la cantidad en inventario
+            #actualizar la cantidad en inventario
             prenda.cantidad -= cantidad
             prenda.save()
             
             
-            # Luego crear el registro en HistorialVentas, asegurando que se relacione con la venta
+            #luego crear el registro en HistorialVentas, asegurando que se relacione con la venta
             HistorialVentas.objects.create(
                 documento_comprador=documento_comprador,
                 codigo_prenda=codigo_prenda,
@@ -249,7 +250,7 @@ def registrar_venta(request):
                 sede=request.user.last_name
             )
             
-            #Verificar que el numero de disónible no este por debajo del stock permitido
+            #verificar que el numero de disonible no este por debajo del stock permitido
             verificar_inventario_bajo(prenda)
             
             return render(request, 'registrar_venta.html', {'success': True})
@@ -271,17 +272,17 @@ def generar_recibo(request):
         if not ventas:
             return render(request, 'generar_recibo.html', {'error': 'No se encontraron ventas para el documento proporcionado'})
         
-        # Calcular el total
+        #total
         total_general = sum(venta.precio_total for venta in ventas)
         
-        # Generar el HTML para el PDF
+        #generar el HTML para el PDF
         html_string = render_to_string('recibo_pdf.html', {
             'ventas': ventas,
             'documento_comprador': documento_comprador,
             'total_general': total_general
         })
         
-        # Crear el PDF usando xhtml2pdf
+        #crear el PDF usando xhtml2pdf
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=recibo.pdf'
         
@@ -303,8 +304,9 @@ def verificar_inventario_bajo(inventario):
 
 
 def enviar_notificacion(inventario):
-    subject = f"Alerta de Inventario Bajo: {inventario.tipo}"
-    message = f"El producto {inventario.tipo} de la sede {inventario.sede} con código {inventario.codigo_prenda} tiene una cantidad baja de {inventario.cantidad} en el inventario."
+    #PARAMETROS PARA ENVIAR CORREO A LA MODISTA
+    subject = f"Alerta de Inventario CRITICO: {inventario.tipo}"
+    message = f"El producto {inventario.tipo} de la sede {inventario.sede} con código {inventario.codigo_prenda} tiene una cantidad critica de {inventario.cantidad} en el inventario."
     email_from = settings.EMAIL_HOST_USER
     recipient_list = ['jdesneidermena15@gmail.com']
     send_mail(subject, message, email_from, recipient_list)
@@ -313,23 +315,23 @@ def enviar_notificacion(inventario):
 
 
 def cuenta_cobro_form(request):
-    # Obtener la lista de productos desde la sesión, o una lista vacía si no existe
+    # Obtener la lista de productos desde la sesion, o una lista vacia si no existe
     productos = request.session.get('productos', [])
     return render(request, 'cuenta_cobro_form.html', {'productos': productos})
 
 def agregar_producto(request):
     if request.method == 'POST':
-        # Si la lista de productos no existe en la sesión, la inicializamos
+        #si la lista de productos no existe en la sesion, la inicializamos
         if 'productos' not in request.session:
             request.session['productos'] = []
-
+            
         codigo_prenda = request.POST.get('codigo_producto')
         nombre = request.POST.get('producto_nombre')
         cantidad = int(request.POST.get('cantidad'))
         precio = float(request.POST.get('precio'))
         total = cantidad * precio
-
-        # Añadimos el nuevo producto a la lista en la sesión
+        
+        #añadimos el nuevo producto a la lista en la sesion
         productos = request.session['productos']
         productos.append({
             'codigo_prenda':codigo_prenda,
@@ -338,32 +340,31 @@ def agregar_producto(request):
             'precio': precio,
             'total': total
         })
-
-        # Guardamos la lista de vuelta en la sesión
+        
+        #guardamos la lista de vuelta en la sesion
         request.session['productos'] = productos
-
-        # Guardamos la sesión para asegurarnos de que los cambios persisten
+        
+        #guardamos la sesion para asegurarnos de que los cambios persisten
         request.session.modified = True
-
+        
         return redirect('cuenta_cobro_form')
-
-    # Si no es un POST, volvemos a mostrar la página con los productos de la sesión
+    
     return render(request, 'cuenta_cobro_form.html', {'productos': request.session.get('productos', [])})
 
 
 
 def capturar_datos_cliente(request):
     if request.method == 'POST':
-        # Guardar datos del cliente en la sesión
+        #guardar datos del cliente
         request.session['institucion'] = request.POST['institucion']
         request.session['nit'] = request.POST['nit']
         request.session['direccion'] = request.POST['direccion']
         request.session['municipio'] = request.POST['municipio']
         request.session['departamento'] = request.POST['departamento']
         
-        # Redirigir a la vista para capturar los datos del pedido
+        #redirigir a la vista para capturar los datos del pedido
         return redirect('capturar_datos_pedido')
-
+    
     return render(request, 'capturar_datos_cliente.html')
 
 
@@ -376,9 +377,9 @@ def capturar_datos_pedido(request):
             return render(request, 'capturar_datos_pedido.html', {
                 'error_message': 'Cantidad y Valor Unitario deben ser números válidos.'
             })
-
+        
         valor_total = cantidad * valor_unitario
-
+        
         producto = {
             'codigo_producto': request.POST['codigo_producto'],
             'descripcion': request.POST['descripcion'],
@@ -386,15 +387,15 @@ def capturar_datos_pedido(request):
             'valor_unitario': valor_unitario,
             'valor_total': valor_total
         }
-
+        
         if 'productos' not in request.session:
             request.session['productos'] = []
-
+            
         request.session['productos'].append(producto)
         request.session.modified = True
-
+        
         return redirect('capturar_datos_pedido')
-
+    
     cliente = {
         'institucion': request.session.get('institucion', ''),
         'nit': request.session.get('nit', ''),
@@ -403,8 +404,8 @@ def capturar_datos_pedido(request):
         'departamento': request.session.get('departamento', ''),
     }
     productos = request.session.get('productos', [])
-
-    # Calcular el total acumulado
+    
+    #total acumulado
     total_a_pagar = sum(producto['valor_total'] for producto in productos)
     
     return render(request, 'capturar_datos_pedido.html', {
@@ -412,9 +413,6 @@ def capturar_datos_pedido(request):
         'productos': productos,
         'total_a_pagar': total_a_pagar
     })
-
-
-
 
 
 
@@ -427,11 +425,11 @@ def guardar_cuenta_cobro(request):
             'municipio': request.session.get('municipio'),
             'departamento': request.session.get('departamento')
         }
-
+        
         productos = request.session.get('productos', [])
-        concepto = request.POST.get('concepto', '')  # Obtener el concepto del formulario
-
-        # Crear y guardar los productos
+        concepto = request.POST.get('concepto', '') 
+        
+        #crear y guardar en la base de datos
         producto_objects = []
         for prod in productos:
             producto = Producto(
@@ -442,8 +440,8 @@ def guardar_cuenta_cobro(request):
             )
             producto.save()
             producto_objects.append(producto)
-
-        # Crear y guardar la cuenta de cobro
+            
+        # Crear y guardar en la base de datos
         cuenta_cobro = CuentaCobro(
             institucion=cliente['institucion'],
             nit=cliente['nit'],
@@ -453,17 +451,17 @@ def guardar_cuenta_cobro(request):
         )
         cuenta_cobro.save()
         cuenta_cobro.productos.set(producto_objects)
-
-        # Crear un contexto con los datos necesarios para el PDF
+        
+        #crear un contexto con los datos necesarios para el PDF
         productos_con_totales = []
         total_general = 0
-
+        
         for p in productos:
             cantidad = int(p['cantidad'])
             valor_unitario = float(p['valor_unitario'])
             valor_total = cantidad * valor_unitario
             total_general += valor_total
-
+            
             productos_con_totales.append({
                 'codigo_producto': p['codigo_producto'],
                 'descripcion': p['descripcion'],
@@ -471,12 +469,12 @@ def guardar_cuenta_cobro(request):
                 'valor_unitario': valor_unitario,
                 'valor_total': valor_total
             })
-
-        # Convertir el total a letras
+            
+        #convertir el precio de nuemro a letras
         total_letras = num2words(total_general, lang='es').capitalize()
         total_formateado = f"{total_letras} (${total_general:,.2f})"
-
-        # Crear el contexto para el template
+        
+        #crear el contexto para el template
         context = {
             'institucion': cliente['institucion'],
             'nit': cliente['nit'],
@@ -489,22 +487,156 @@ def guardar_cuenta_cobro(request):
             'total_formateado': total_formateado,
             'concepto': concepto  # Añadir concepto al contexto
         }
-
+        
         # Generar el PDF
         template_path = 'cuentadecobro.html'
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="cuenta_cobro.pdf"'
-
+        
         template = get_template(template_path)
         html = template.render(context)
         pisa_status = pisa.CreatePDF(html, dest=response)
-
+        
         if pisa_status.err:
             return HttpResponse('Error al generar el PDF')
-
-        # Limpiar la sesión de productos
+        
+        #limpiar la seison de productos
         request.session.pop('productos', None)
-
+        
         return response
-
+    
     return redirect('capturar_datos_cliente')
+
+
+def nuevoht(request):
+    return render(request, 'nuevo.html')
+
+
+
+def gestionar_cliente(request):
+    clientes = []  # Inicializa la variable clientes
+    form = None
+    error = None
+    
+    if request.method == 'POST':
+        nit = request.POST.get('nit')
+        action = request.POST.get('action')  # edit or delete
+        
+        if nit:
+            clientes = CuentaCobro.objects.filter(nit=nit)
+            
+            if action == 'delete':
+                if clientes.exists():
+                    clientes.delete()
+                    messages.success(request, "Clientes eliminados exitosamente.")
+                    return redirect('gestionar_cliente')
+                else:
+                    messages.error(request, "No se encontraron clientes para eliminar.")
+                    
+            if action == 'edit':
+                if clientes.exists():
+                    for cliente in clientes:
+                        form = CuentaCobroForm(request.POST, instance=cliente)
+                        if form.is_valid():
+                            form.save()
+                    messages.success(request, "Clientes actualizados exitosamente.")
+                    return redirect('gestionar_cliente')
+                else:
+                    messages.error(request, "No se encontraron clientes para actualizar.")
+        else:
+            messages.error(request, "NIT no encontrado")
+            return render(request, 'gestionar_cliente.html')
+            
+            
+            
+    if request.method == 'GET':
+        nit = request.GET.get('nit')
+        if nit:
+            clientes = CuentaCobro.objects.filter(nit=nit)
+            if clientes.exists():
+                #mostrar solo el primer registro para el formulario
+                form = CuentaCobroForm(instance=clientes.first())
+                
+    return render(request, 'gestionar_cliente.html', {
+        'clientes': clientes,
+        'form': form,
+        'error': error,
+    })
+
+
+
+
+def buscar_cliente(request):
+    if request.method == 'POST':
+        nit = request.POST.get('nit', None)
+        if nit:
+            cuenta_cobros = CuentaCobro.objects.filter(nit=nit)
+            if cuenta_cobros.exists():
+                cuenta_cobro = cuenta_cobros.first()
+                return redirect('capturar_datos_pedido2', cuenta_cobro_id=cuenta_cobro.id)
+            else:
+                messages.error(request, "NIT no encontrado")
+                return render(request, 'buscar_cliente.html')
+        else:
+            messages.error(request, "Por favor, ingresa un NIT.")
+            return render(request, 'buscar_cliente.html')
+    return render(request, 'buscar_cliente.html')
+
+
+
+def datos_pedido(request, cliente_id):
+    cliente = Cliente.objects.get(id=cliente_id)
+    productos = request.session.get('productos', [])
+    
+    total_a_pagar = sum([p['valor_total'] for p in productos])
+    context = {
+        'cliente': cliente,
+        'productos': productos,
+        'total_a_pagar': total_a_pagar,
+    }
+    
+    return render(request, 'nuevo.html', context)
+
+
+
+def capturar_datos_pedido2(request, cuenta_cobro_id):
+    cuenta_cobro = get_object_or_404(CuentaCobro, id=cuenta_cobro_id)
+    
+    if request.method == 'POST':
+        try:
+            cantidad = float(request.POST['cantidad'])
+            valor_unitario = float(request.POST['valor_unitario'])
+        except ValueError:
+            return render(request, 'nuevo.html', {
+                'cuenta_cobro': cuenta_cobro,
+                'error_message': 'Cantidad y Valor Unitario deben ser números válidos.'
+            })
+            
+        valor_total = cantidad * valor_unitario
+        
+        producto = {
+            'codigo_producto': request.POST['codigo_producto'],
+            'descripcion': request.POST['descripcion'],
+            'cantidad': cantidad,
+            'valor_unitario': valor_unitario,
+            'valor_total': valor_total
+        }
+        
+        if 'productos' not in request.session:
+            request.session['productos'] = []
+            
+        request.session['productos'].append(producto)
+        request.session.modified = True
+        
+        return redirect('capturar_datos_pedido2', cuenta_cobro_id=cuenta_cobro_id)
+    
+    productos = request.session.get('productos', [])
+    total_a_pagar = sum([p['valor_total'] for p in productos])
+    
+    context = {
+        'cuenta_cobro': cuenta_cobro,
+        'productos': productos,
+        'total_a_pagar': total_a_pagar,
+    }
+    
+    return render(request, 'nuevo.html', context)

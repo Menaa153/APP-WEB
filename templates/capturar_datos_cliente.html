@@ -1,30 +1,142 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Datos del Cliente</title>
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        select, input[type="text"], input[type="submit"], button {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Estilos para los formularios */
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Estilos para el mensaje de error */
+        p[style*="color: red;"] {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #721c24;
+        }
+    </style>
+    <script>
+        function toggleForm() {
+            const selection = document.getElementById('cliente_option').value;
+            const nuevoClienteForm = document.getElementById('nuevo_cliente_form');
+            const clienteExistenteForm = document.getElementById('cliente_existente_form');
+
+            if (selection === 'nuevo') {
+                nuevoClienteForm.style.display = 'block';
+                clienteExistenteForm.style.display = 'none';
+            } else if (selection === 'existente') {
+                nuevoClienteForm.style.display = 'none';
+                clienteExistenteForm.style.display = 'block';
+            } else {
+                nuevoClienteForm.style.display = 'none';
+                clienteExistenteForm.style.display = 'none';
+            }
+        }
+    </script>
 </head>
 <body>
     <h2>Datos del Cliente</h2>
-    <form method="POST" action="{% url 'capturar_datos_cliente' %}">
-        {% csrf_token %}
-        <label for="institucion">Institución:</label>
-        <input type="text" id="institucion" name="institucion" required><br><br>
 
-        <label for="nit">NIT:</label>
-        <input type="text" id="nit" name="nit" required><br><br>
+    <!-- Selección de Cliente Existente o Nuevo -->
+    <label for="cliente_option">Seleccione una opción:</label>
+    <select id="cliente_option" name="cliente_option" onchange="toggleForm()" required>
+        <option value="">Seleccione...</option>
+        <option value="nuevo">Cliente Nuevo</option>
+        <option value="existente">Cliente Existente</option>
+    </select>
 
-        <label for="direccion">Dirección:</label>
-        <input type="text" id="direccion" name="direccion" required><br><br>
+    <br><br>
 
-        <label for="municipio">Municipio:</label>
-        <input type="text" id="municipio" name="municipio" required><br><br>
+    <!-- Formulario para Cliente Nuevo -->
+    <div id="nuevo_cliente_form" style="display: none;">
+        <form method="POST" action="{% url 'capturar_datos_cliente' %}">
+            {% csrf_token %}
+            <label for="institucion">Institución:</label>
+            <input type="text" id="institucion" name="institucion" required><br><br>
 
-        <label for="departamento">Departamento:</label>
-        <input type="text" id="departamento" name="departamento" required><br><br>
+            <label for="nit">NIT:</label>
+            <input type="text" id="nit" name="nit" required><br><br>
 
-        <button type="submit">Guardar Datos del Cliente</button>
-    </form>
+            <label for="direccion">Dirección:</label>
+            <input type="text" id="direccion" name="direccion" required><br><br>
+
+            <label for="municipio">Municipio:</label>
+            <input type="text" id="municipio" name="municipio" required><br><br>
+
+            <label for="departamento">Departamento:</label>
+            <input type="text" id="departamento" name="departamento" required><br><br>
+
+            <button type="submit">Guardar Datos del Cliente</button>
+        </form>
+    </div>
+
+    <!-- Formulario para Cliente Existente -->
+    <div id="cliente_existente_form" style="display: none;">
+        <form method="GET" action="{% url 'buscar_cliente' %}">
+            <label for="nit_existente">Ir a buscar cliente por el NIT:</label>
+            <button type="submit">Ir</button>
+        </form>
+    </div>
+
+    <br><br>
+    <a href="{% url 'home' %}"><button>Volver al Inicio</button></a>
 </body>
 </html>

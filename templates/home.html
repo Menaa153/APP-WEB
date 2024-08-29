@@ -86,8 +86,10 @@
     <div class="button-container">
         <a href="{% url 'ver_inventario' %}"><button>Ver Inventario</button></a>
         <a href="{% url 'registrar_venta' %}"><button>Registrar Venta</button></a>
+        <a href="{% url 'gestionar_cliente' %}"><button>Gestionar clientes</button></a>
         <a href="{% url 'capturar_datos_cliente' %}"><button>Generar cuenta de Cobro</button></a>
-        <a href="{% url 'generar_recibo' %}"><button>Generar recibo de pago</button></a>
+        <!--<a href="{% url 'generar_recibo' %}"><button>Generar recibo de pago</button></a>-->
+
     </div>
     
     <form action="{% url 'logout' %}" method="post">

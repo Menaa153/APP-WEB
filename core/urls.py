@@ -42,13 +42,8 @@ urlpatterns = [
     path('capturar_datos_pedido/', views.capturar_datos_pedido, name='capturar_datos_pedido'),
     path('guardar_cuenta_cobro/', views.guardar_cuenta_cobro, name='guardar_cuenta_cobro'),
     path('gestionar_cliente/', views.gestionar_cliente, name='gestionar_cliente'),
-    #path('gestionar_cliente2/', views.gestionar_cliente2, name='gestionar_cliente2'),
-    #path('nuevo/', views.capturar_datos_pedido2, name='nuevo'),
     path('buscar_cliente/', views.buscar_cliente, name='buscar_cliente'),
-    path('gestionar_cliente2/', views.gestionar_cliente2, name='gestionar_cliente2'),
     #path('nuevo/', views.nuevoht, name='nuevo'),
-    #path('capturar_datos_pedido/<int:cliente_id>/', views.capturar_datos_pedido2, name='capturar_datos_pedido'),
-    #path('nuevo/', views.capturar_datos_pedido2, name='capturar_datos_pedido'),
     path('buscar_cliente/', views.buscar_cliente, name='buscar_cliente'),
     path('capturar_datos_pedido2/<int:cuenta_cobro_id>/', views.capturar_datos_pedido2, name='capturar_datos_pedido2'),
 ]

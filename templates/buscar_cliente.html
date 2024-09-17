@@ -83,13 +83,13 @@
     </style>
 </head>
 <body>
-    <h2>Buscar Cuenta de Cobro por NIT</h2>
+    <h2>Buscar Cliente por NIT</h2>
     <form method="POST" action="{% url 'buscar_cliente' %}">
         {% csrf_token %}
         <label for="nit">NIT:</label>
         <input type="text" id="nit" name="nit" required><br><br>
 
-        <button type="submit">Buscar Cuenta de Cobro</button>
+        <button type="submit">Buscar Cliente</button>
     </form>
 
     {% if error_message %}
@@ -98,4 +98,4 @@
 
     <a href="{% url 'home' %}"><button>Volver al Inicio</button></a>
 </body>
-</html>
+</html> 

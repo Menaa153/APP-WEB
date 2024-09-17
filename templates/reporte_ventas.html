@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Ventas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+        button {
+            justify-content: center;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Reporte de Ventas</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Documento</th>
+                <th>Producto</th>
+                <th>Sede</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for venta in ventas %}
+            <tr>
+                <td>{{ venta.documento_comprador }}</td>
+                <td>{{ venta.codigo_prenda }}</td>
+                <td>{{ venta.sede }}</td>
+                <td>{{ venta.cantidad }}</td>
+                {% load humanize %}
+                <td>{{ venta.precio_total|intcomma }}</td>
+                <td>{{ venta.fecha }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No se encontraron ventas en el rango de fechas seleccionado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class=".button-container">
+        <a href=" {% url 'home' %} "><button>Volver al Inicio</button></a>
+        <a href=" {% url 'generar_reporteg' %} "><button>Volver a generar reporte</button></a>
+    </div>
+
+    <div class="footer">
+        Desarrollado por: Equipo G1.13
+    </div>
+</body>
+</html>

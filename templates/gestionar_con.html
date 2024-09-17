@@ -81,20 +81,19 @@
     </style>
 </head>
 <body>
-    <h1>Confecciones Leidy - Sede {{ user.last_name }} </h1>
+    <h1>Gestionar Clientes</h1>
     
     <div class="button-container">
-        <a href="{% url 'ver_inventario_ven' %}"><button>Ver Inventario</button></a>
-        <a href="{% url 'registrar_venta' %}"><button>Registrar Venta</button></a>
-        <a href="{% url 'formulario_reporte' %}"><button>Generar Reporte de Ventas</button></a>
+        <a href="{% url 'registrar_cliente' %}"><button>Agregar un cliente nuevo</button></a>
+        <a href="{% url 'gestionar_cliente2' %}"><button>Modificar información de un cliente</button></a>
+        <a href="{% url 'eliminar_cliente' %}"><button>Eliminar cliente de BD</button></a>
+        
 
     </div>
     
-    <form action="{% url 'logout' %}" method="post">
-        {% csrf_token %}
-        <input class="form input" type="submit" value="Cerrar Sesión">
-    </form>
-
+    <div>
+        <a href="{% url 'home' %}"><button> Volver al Inicio</button></a>
+    </div>
     <!-- Pie de página -->
     <div class="footer">
         Desarrollado por: Equipo G1.13

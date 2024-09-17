@@ -1,30 +1,33 @@
-{% load static %}
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Generar Recibo</title>
-    <style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Cliente</title>
+
+        <style>
         /* Estilos generales */
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #e9ecef;
+            background-color: #f4f4f9;
             margin: 0;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+
         h1 {
             color: #333;
             text-align: center;
             margin-bottom: 20px;
         }
+
         a {
             text-decoration: none;
             color: white;
         }
+
         /* Estilos para los formularios */
         form {
             background-color: #fff;
@@ -34,13 +37,15 @@
             width: 100%;
             max-width: 400px;
         }
+
         label {
             font-weight: bold;
             display: block;
             margin-bottom: 8px;
             color: #333;
         }
-        input[type="text"] {
+
+        input[type="text"], input[type="number"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
@@ -48,49 +53,46 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
-        button[type="submit"] {
+
+        input[type="submit"] {
             padding: 10px 20px;
-            background-color: #28a745;
+            background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            width: 100%;
         }
-        button[type="submit"]:hover {
-            background-color: #218838;
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
         }
-        /* Estilos para los mensajes de error */
-        p[style*="color: red;"] {
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
+
+        /* Estilos para los mensajes */
+        p[style*="color: green;"] {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
             padding: 10px;
             border-radius: 5px;
-            margin-top: 20px;
-            text-align: center;
+            margin-bottom: 20px;
         }
-        /* Estilo para el botón "Volver al Inicio" */
-        .btn-inicio {
+
+        /* Botones adicionales */
+        a button {
             padding: 10px 20px;
-            background-color: #007bff; /* Color de fondo azul */
+            background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            font-size: 16px;
-            margin-top: 20px; /* Espacio superior para separar del contenido */
-            text-align: center;
-            width: 100%;
-            max-width: 200px; /* Ancho máximo del botón */
+            margin-top: 20px;
         }
-        .btn-inicio:hover {
-            background-color: #0056b3; /* Color de fondo azul oscuro cuando se pasa el cursor */
+
+        a button:hover {
+            background-color: #0056b3;
         }
-        a {
-            text-decoration: none;
-        }
+
         /* Estilos para el pie de página */
         .footer {
             position: fixed;
@@ -102,20 +104,40 @@
     </style>
 </head>
 <body>
-    <h1>Generar cuenta de cobro</h1>
-    <form method="post">
-        {% csrf_token %}
-        <label for="documento">Documento del Comprador:</label>
-        <input type="text" id="documento" name="documento" required>
-        <button type="submit">Generar Recibo</button>
-    </form>
-    {% if error %}
-    <p style="color: red;">{{ error }}</p>
-    {% endif %}
-    <a href="{% url 'home' %}">
-        <button class="btn-inicio">Volver al Inicio</button>
-    </a>
+    <h2>Registrar Nuevo Cliente</h2>
 
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div style="color: green;" class="alert {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="institucion">Institución:</label>
+        <input type="text" id="institucion" name="institucion" required><br>
+
+        <label for="nit">NIT:</label>
+        <input type="text" id="nit" name="nit" required><br>
+
+        <label for="direccion">Dirección:</label>
+        <input type="text" id="direccion" name="direccion" required><br>
+
+        <label for="municipio">Municipio:</label>
+        <input type="text" id="municipio" name="municipio" required><br>
+
+        <label for="departamento">Departamento:</label>
+        <input type="text" id="departamento" name="departamento" required><br>
+
+        <button type="submit">Registrar</button>
+    </form>
+    <div>
+        <a href="{% url 'gestionar_cliente' %}"><button>Volver</button></a>
+        <a href="{% url 'home' %}"><button>Volver al Inicio</button></a>
+    </div>
+    
     <!-- Pie de página -->
     <div class="footer">
         Desarrollado por: Equipo G1.13

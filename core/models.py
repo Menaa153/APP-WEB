@@ -33,37 +33,25 @@ class HistorialVentas(models.Model):
 
 
 
-class Venta(models.Model):
-    documento_comprador = models.CharField(max_length=20, null=True, blank=True)
-    codigo_prenda = models.CharField(max_length=100, null=True, blank=True)
-    cantidad = models.IntegerField()
-    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
-    precio_total = models.DecimalField(max_digits=10, decimal_places=2)
-    fecha = models.DateTimeField(default=timezone.now)
-    sede = models.CharField(max_length=100, null=True, blank=True)
 
-    def __str__(self):
-        return f"Venta {self.codigo_venta} - {self.codigo_prenda}"
-
-
-
-class Producto(models.Model):
-    codigo_producto = models.CharField(max_length=20)
-    descripcion = models.CharField(max_length=255)
-    cantidad = models.IntegerField()
-    valor_unitario = models.DecimalField(max_digits=10, decimal_places=2)
-
-    def __str__(self):
-        return self.descripcion
-
-class CuentaCobro(models.Model):
+class Cliente(models.Model):
     institucion = models.CharField(max_length=255)
-    nit = models.CharField(max_length=50)
+    nit = models.CharField(max_length=60)
     direccion = models.CharField(max_length=255)
     municipio = models.CharField(max_length=255)
     departamento = models.CharField(max_length=255)
-    fecha_creacion = models.DateField(auto_now_add=True)
-    productos = models.ManyToManyField(Producto)
+    fecha_registro = models.DateField(auto_now_add=True)
+
+
+
+class HistorialCuentasdeCobro(models.Model):
+    cliente = models.CharField(max_length=60)  # Relación con el cliente
+    codigo_producto = models.CharField(max_length=20)
+    descripcion = models.CharField(max_length=255)
+    cantidad = models.IntegerField()
+    valor_unitario = models.DecimalField(max_digits=20, decimal_places=2)
+    precio_total = models.DecimalField(max_digits=20, decimal_places=2)
+    fecha = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return self.institucion
+        return f"Cuenta {self.codigo_producto} para {self.cliente.nit} - {self.fecha}"

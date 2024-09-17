@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar Reporte de Ventas</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        select, input[type="date"] {
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 1em;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Generar Reporte de Ventas</h1>
+
+    <form method="POST" action="{% url 'generar_reporte2' %}">
+        {% csrf_token %}
+        <label for="tipo_reporte">Tipo de Reporte:</label>
+        <select id="tipo_reporte" name="tipo_reporte" required>
+            <option value="general">General (Todas las sedes)</option>
+            <option value="sede">Por sede específica</option>
+        </select>
+
+        <label for="sede">Seleccione la Sede:</label>
+        <select id="sede" name="sede">
+            <option value="">Seleccione una sede</option>
+            <option value="BOGOTA">BOGOTA</option>
+            <option value="MELGAR">MELGAR</option>
+            <option value="CALI">CALI</option>
+            <option value="PALANQUERO">PALANQUERO</option>
+            <option value="VILLAVICENCIO">VILLAVICENCIO</option>
+            <option value="TRECESQUINAS">TRECESQUINAS</option>
+        </select>
+
+        <label for="fecha_inicio">Fecha de inicio:</label>
+        <input type="date" id="fecha_inicio" name="fecha_inicio" required>
+
+        <label for="fecha_fin">Fecha de fin:</label>
+        <input type="date" id="fecha_fin" name="fecha_fin" required>
+        
+        <button type="submit">Generar Reporte</button>
+    </form>
+    <br>
+    <a href="{% url 'home' %}"> <button type="submit">Volver al Inicio</button></a>
+    
+    <div class="footer">
+        Desarrollado por: Equipo G1.13
+    </div>
+
+    <script>
+        // Deshabilitar el campo "sede" si el tipo de reporte es general
+        const tipoReporteSelect = document.getElementById('tipo_reporte');
+        const sedeSelect = document.getElementById('sede');
+
+        tipoReporteSelect.addEventListener('change', function() {
+            if (this.value === 'general') {
+                sedeSelect.disabled = true;
+            } else {
+                sedeSelect.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

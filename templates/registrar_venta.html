@@ -6,7 +6,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Venta</title>
-    <link rel="icon" href="static/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Autocompletado para código de prenda
+            $("#codigo_prenda").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "{% url 'autocomplete_codigo_prenda' %}",
+                        data: {
+                            'term': request.term
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            response(data);
+                        }
+                    });
+                },
+                minLength: 2,  // Número mínimo de caracteres para empezar a autocompletar
+            });
+            $(document).ready(function() {
+                $(document).ready(function() {
+        $("#previsualizar").click(function() {
+            var codigoPrenda = $("#codigo_prenda").val();
+            
+            if (codigoPrenda) {
+                $.ajax({
+                    url: "{% url 'obtener_datos_inventario' %}",
+                    data: {
+                        'codigo_prenda': codigoPrenda
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.error) {
+                            alert(data.error);
+                        } else {
+                            // Actualizar los campos de previsualización
+                            $("#codigoPrenda").text(codigoPrenda);
+                            $("#precioUnitario").text(data.precio_unitario);
+                            $("#cantidadInventario").text(data.cantidad_inventario);
+                            
+                            var cantidad = $("#cantidad").val();
+                            var totalPagar = data.precio_unitario * cantidad;
+                            $("#totalPagar").text(totalPagar);
+                            
+                            // Mostrar la tabla
+                            $("#previsualizacionVenta").show();
+                            
+                            // Habilitar el botón de registrar venta
+                            $("#registrarBtn").prop("disabled", false);
+                        }
+                    },
+                    error: function() {
+                        alert("Error al obtener datos del inventario.");
+                    }
+                });
+            } else {
+                alert("Por favor, ingresa el código de prenda.");
+            }
+        });
+    });
+
+        });
+        });
+        
+    </script>
     <style>
         /* Estilos generales */
         body {
@@ -69,24 +137,20 @@
             background-color: #218838;
         }
 
-        /* Estilos para los mensajes */
-        p {
-            font-size: 16px;
-            margin-bottom: 15px;
+        table {
+            width: 100%;
+            max-width: 400px;
+            margin-top: 20px;
+            border-collapse: collapse;
         }
 
-        p[style*="color: green;"] {
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-            padding: 10px;
-            border-radius: 5px;
+        table, th, td {
+            border: 1px solid #ccc;
         }
 
-        p[style*="color: red;"] {
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
+        th, td {
             padding: 10px;
-            border-radius: 5px;
+            text-align: center;
         }
 
         /* Botones adicionales */
@@ -104,6 +168,7 @@
         a button:hover {
             background-color: #0056b3;
         }
+
         /* Estilos para el pie de página */
         .footer {
             position: fixed;
@@ -117,39 +182,69 @@
 <body>
     <h1>Registrar Venta</h1>
 
-    {% if success %}
-        <p style="color: green;">¡Venta registrada exitosamente!</p>
-    {% endif %}
-    
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
+<!-- Bloque para mostrar mensajes -->
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {{ message.tags }}" 
+            style="color: {% if 'error' in message.tags %}red{% elif 'success' in message.tags %}green{% else %}black{% endif %};">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+{% endif %}
 
-    <form action="{% url 'registrar_venta' %}" method="post">
+
+    <form id="ventaForm" action="{% url 'registrar_venta' %}" method="post">
         {% csrf_token %}
 
         <label for="documento">Documento:</label>
         <input type="text" id="documento" name="documento" required><br>
         
         <label for="codigo_prenda">Código de Prenda:</label>
-        <input type="text" id="codigo_prenda" name="codigo_prenda" required><br>
+        <input type="text" id="codigo_prenda" name="codigo_prenda" required autocomplete="off"><br>
         
         <label for="cantidad">Cantidad:</label>
         <input type="number" id="cantidad" name="cantidad" required><br>
         
-        <label for="precio_unitario">Precio Unitario:</label>
-        <input type="number" step="0.01" id="precio_unitario" name="precio_unitario" required><br>
-        
-        <input type="submit" value="Registrar Venta">
+        <input type="button" id="previsualizar" value="Previsualizar Venta">
+        <input type="submit" value="Registrar Venta" disabled id="registrarBtn">
     </form>
 
+    <table id="previsualizacionVenta" style="display:none;">
+        <thead>
+            <tr>
+                <th>Código de Prenda</th>
+                <th>Precio Unitario</th>
+                <th>Cantidad en Inventario</th>
+                <th>Total a Pagar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td id="codigoPrenda"></td>
+                <td id="precioUnitario"></td>
+                <td id="cantidadInventario"></td>
+                <td id="totalPagar|intcomma"></td>
+            </tr>
+        </tbody>
+    </table>
+
     <!-- Botón para volver al inventario -->
-    <a href="{% url 'ver_inventario' %}">
-        <button>Volver a Inventario</button>
-    </a>
-        <!-- Pie de página -->
-    <div class="footer">
-            Desarrollado por: Equipo G1.13
+    <div>
+        <a href="{% url 'ver_inventario' %}">
+            <button>Volver a Inventario</button>
+        </a>
+    
+        <a href="{% url 'home' %}">
+            <button>Volver al inicio</button>
+        </a>
     </div>
+    
+    <!-- Pie de página -->
+    <div class="footer">
+        Desarrollado por: Equipo G1.13
+    </div>
+
 </body>
 </html>

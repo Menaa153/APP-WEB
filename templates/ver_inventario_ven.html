@@ -8,6 +8,48 @@
     <title>Inventario</title>
     <link rel="stylesheet" href="{% static 'css/inventario.css' %}">
     <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Autocompletado para código de prenda
+            $("#codigo_prenda").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "{% url 'autocomplete_codigo_prenda' %}",
+                        data: {
+                            'term': request.term
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            response(data);
+                        }
+                    });
+                },
+                minLength: 2,  // Número mínimo de caracteres para empezar a autocompletar
+            });
+    
+            // Autocompletado para tipo de prenda
+            $("#tipo_prenda").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "{% url 'autocomplete_tipo_prenda' %}",
+                        data: {
+                            'term': request.term
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            response(data);
+                        }
+                    });
+                },
+                minLength: 2,
+            });
+        });
+    </script>
+    
     <style>
         /* Estilos generales */
         body {
@@ -32,16 +74,24 @@
 
         /* Estilos para los formularios */
         form {
+            text-align: center;
             margin-bottom: 20px;
             background-color: #ffffff;
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            width: 100%;
+            width: auto;
             max-width: 600px;
             display: flex;
-            flex-direction: column;
+            flex-direction:column;
             gap: 15px;
+        }
+            /* Ajustes para que los formularios estén en línea horizontal */
+        .form-container {
+            display: flex;
+            justify-content: center; /* Centra los formularios */
+            gap: 20px; /* Espacio entre los formularios */
+            margin-bottom: 20px;
         }
 
         label {
@@ -162,18 +212,39 @@
             font-size: 12px;
             color: #666;
         }
+        .low-stock-text {
+            color: red;
+        }
+        
+
     </style>
 </head>
 <body>
     <h1>Inventario de Productos</h1>
+    <div class="form-container">
+        <!-- Formulario para buscar un producto -->
+        <form action="{% url 'buscar_producto' %}" method="post">
+            {% csrf_token %}
+            <label for="codigo_prenda">Buscar por Código de Prenda</label>
+            <input type="text" id="codigo_prenda" name="codigo_prenda" required>
+            <button type="submit">Buscar</button>
+        </form>
+        <form action="{% url 'buscar_productotipo' %}" method="post">
+            {% csrf_token %}
+            <label for="tipo_prenda">Buscar por Tipo de Prenda</label>
+            <input type="text" id="tipo_prenda" name="tipo_prenda">
+            <button type="submit">Buscar</button>
+        </form>
+        
+        <form action="{% url 'buscar_productotalla' %}" method="post">
+            {% csrf_token %}
+            <label for="talla">Buscar por Talla</label>
+            <input type="text" id="talla" name="talla" required>
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
 
-    <!-- Formulario para buscar un producto -->
-    <form action="{% url 'buscar_producto' %}" method="post">
-        {% csrf_token %}
-        <label for="codigo_prenda">Buscar por código de Prenda:</label>
-        <input type="text" id="codigo_prenda" name="codigo_prenda" required>
-        <button type="submit">Buscar</button>
-    </form>
+    
 
     <!-- Bloque para mostrar mensajes -->
     {% if messages %}
@@ -195,15 +266,17 @@
             <th>Precio por Unidad</th>
         </tr>
         {% for producto in inventario %}
-        <tr>
+        <tr class="{% if producto.cantidad < 30 %}low-stock-text{% endif %}">
             <td>{{ producto.sede }}</td>
             <td>{{ producto.codigo_prenda }}</td>
             <td>{{ producto.tipo }}</td>
             <td>{{ producto.talla }}</td>
             <td>{{ producto.cantidad }}</td>
-            <td>{{ producto.precio_unidad }}</td>
+            {% load humanize %}
+            <td>{{ producto.precio_unidad|intcomma }}</td>
         </tr>
         {% endfor %}
+        
     </table>
 
     <!-- Botón para agregar producto -->

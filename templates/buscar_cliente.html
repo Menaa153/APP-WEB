@@ -91,11 +91,17 @@
 
         <button type="submit">Buscar Cliente</button>
     </form>
-
-    {% if error_message %}
-    <p style="color: red;">{{ error_message }}</p>
+    <br>
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert {{ message.tags }}" 
+                style="color: rgb(255, 6, 6);" class="alert {{ message.tags }}">{{ message }}
+            </div>
+            {% endfor %}
+        </div>
     {% endif %}
-
+    <br>
     <a href="{% url 'home' %}"><button>Volver al Inicio</button></a>
 </body>
 </html> 

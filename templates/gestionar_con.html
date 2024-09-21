@@ -69,6 +69,21 @@
         form input[type="submit"]:hover {
             background-color: darkred;
         }
+                /* Estilo del botón de volver al inicio */
+        .back-button {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .back-button:hover {
+            background-color: #5a6268;
+        }
 
         /* Estilos para el pie de página */
         .footer {
@@ -92,7 +107,7 @@
     </div>
     
     <div>
-        <a href="{% url 'home' %}"><button> Volver al Inicio</button></a>
+        <a href="{% url 'home' %}"><button class="back-button"> Volver al Inicio</button></a>
     </div>
     <!-- Pie de página -->
     <div class="footer">

@@ -84,6 +84,14 @@
             color: #155724;
         }
 
+        /* Contenedor de los botones */
+        .button-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center; /* Centra los botones horizontalmente */
+            gap: 10px; /* Espacio entre los botones */
+        }
+        
         /* Estilo del botón de volver al inicio */
         .back-button {
             background-color: #6c757d;
@@ -100,13 +108,6 @@
             background-color: #5a6268;
         }
 
-        /* Botón de agregar producto */
-        .button-container {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
     </style>
 
 </head>
@@ -114,18 +115,6 @@
 
 
     <h1>Gestión de Clientes</h1>
-
-    <!-- Mostrar un mensaje de error si no se encuentra ningún cliente -->
-    {% if error %}
-        <p class="error">{{ error }}</p>
-    {% endif %}
-    
-    <!-- Mostrar un mensaje de éxito -->
-    {% if messages %}
-        {% for message in messages %}
-            <p class="success">{{ message }}</p>
-        {% endfor %}
-    {% endif %}
     
     <!-- Formulario para buscar clientes por NIT -->
     <form method="GET" action="{% url 'eliminar_cliente' %}">
@@ -133,6 +122,14 @@
         <input type="text" id="nit" name="nit" required>
         <button type="submit">Buscar</button>
     </form>
+    <!-- Mostrar los mensajes de éxito o error -->
+    {% if messages %}
+        {% for message in messages %}
+            <p class="{% if 'error' in message.tags %}error{% elif 'success' in message.tags %}success{% endif %}">
+                {{ message }}
+            </p>
+        {% endfor %}
+    {% endif %}
 
     {% if clientes %}
         <h2>Información del Cliente</h2>
@@ -153,9 +150,9 @@
         </form>
     {% endif %}
 
-    <div class=".button-container">
-        <a href="{% url 'home' %}"><button class="back-button">Volver al Inicio</button></a>
+    <div class="button-container">
         <a href="{% url 'gestionar_cliente' %}"><button>Volver</button></a>
+        <a href="{% url 'home' %}"><button class="back-button">Volver al Inicio</button></a>
     </div>
 </body>
 </html>

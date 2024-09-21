@@ -82,14 +82,15 @@
                 <td>{{ p.codigo_producto }}</td>
                 <td>{{ p.descripcion }}</td>
                 <td>{{ p.cantidad|floatformat:0 }}</td>
-                <td>{{ p.valor_unitario|floatformat:2 }}</td>
-                <td>{{ p.valor_total|floatformat:2 }}</td>
+                {% load humanize %}
+                <td>{{ p.valor_unitario|intcomma }}</td>
+                <td>{{ p.valor_total|intcomma }}</td>
             </tr>
             {% endfor %}
             <!-- Fila para el total a pagar -->
             <tr class="total-row">
                 <td colspan="4" style="text-align: right;"><strong>Total a Pagar:</strong></td>
-                <td>{{ total|floatformat:2 }}</td>
+                <td>{{ total|intcomma }}</td>
             </tr>
         </tbody>
     </table><br><br><br>

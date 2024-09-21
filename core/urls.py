@@ -53,7 +53,7 @@ urlpatterns = [
     path('formulario_reporte/', views.reporte_mensual, name='formulario_reporte'),
     path('generar_reporte2/', views.generar_reporte2, name='generar_reporte2'),
     path('generar_reporteg/', views.generar_reporteg, name='generar_reporteg'),
-
+    path('historicoVentas/ven/', views.HistoricoVentas, name='historicoventas'),
 
 
 ]

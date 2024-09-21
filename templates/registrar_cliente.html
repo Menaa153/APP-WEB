@@ -78,6 +78,21 @@
         }
 
         /* Botones adicionales */
+        .a-button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .a-button:hover {
+            background-color: #0056b3;
+        }
+                /* Botones adicionales */
         a button {
             padding: 10px 20px;
             background-color: #007bff;
@@ -92,7 +107,21 @@
         a button:hover {
             background-color: #0056b3;
         }
+                /* Estilo del botón de volver al inicio */
+        .back-button {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+        }
 
+        .back-button:hover {
+            background-color: #5a6268;
+        }
         /* Estilos para el pie de página */
         .footer {
             position: fixed;
@@ -107,11 +136,11 @@
     <h2>Registrar Nuevo Cliente</h2>
 
     {% if messages %}
-    <div class="messages">
-        {% for message in messages %}
-        <div style="color: green;" class="alert {{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-    </div>
+        <div class="messages">
+            {% for message in messages %}
+            <div style="color: green;" class="alert {{ message.tags }}">{{ message }}</div><br>
+            {% endfor %}
+        </div>
     {% endif %}
 
     <form method="POST">
@@ -131,11 +160,11 @@
         <label for="departamento">Departamento:</label>
         <input type="text" id="departamento" name="departamento" required><br>
 
-        <button type="submit">Registrar</button>
+        <button class="a-button" type="submit">Registrar</button>
     </form>
     <div>
         <a href="{% url 'gestionar_cliente' %}"><button>Volver</button></a>
-        <a href="{% url 'home' %}"><button>Volver al Inicio</button></a>
+        <a href="{% url 'home' %}"><button class="back-button">Volver al Inicio</button></a>
     </div>
     
     <!-- Pie de página -->

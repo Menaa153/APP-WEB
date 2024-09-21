@@ -8,6 +8,31 @@
     <title>Inventario</title>
     <link rel="stylesheet" href="{% static 'css/inventario.css' %}">
     <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Autocompletado para código de prenda
+            $("#codigo_prenda").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "{% url 'autocomplete_codigo_prenda' %}",
+                        data: {
+                            'term': request.term
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            response(data);
+                        }
+                    });
+                },
+                minLength: 2,  // Número mínimo de caracteres para empezar a autocompletar
+            });
+        });
+    </script>
+
     <style>
         /* Estilos generales */
         body {
@@ -154,6 +179,10 @@
             justify-content: center;
             gap: 10px;
         }
+
+        .low-stock-text {
+            color: red;
+        }
         
         /* Estilos para el pie de página */
         .footer {
@@ -176,7 +205,7 @@
     <!-- Formulario para buscar un producto -->
     <form action="{% url 'buscar_producto' %}" method="post">
         {% csrf_token %}
-        <label for="codigo_prenda">Código de Prenda:</label>
+        <label for="codigo_prenda">Buscar por Código de Prenda</label>
         <input type="text" id="codigo_prenda" name="codigo_prenda" required>
         <button type="submit">Buscar</button>
     </form>
@@ -249,30 +278,27 @@
     {% endif %}
 
     <!-- Tabla de inventario -->
-    <table>
-        <thead>
-            <tr>
-                <th>Sede</th>
-                <th>Código de Prenda</th>
-                <th>Tipo</th>
-                <th>Talla</th>
-                <th>Cantidad</th>
-                <th>Precio por Unidad</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for producto in inventario %}
-            <tr>
-                <td>{{ producto.sede }}</td>
-                <td>{{ producto.codigo_prenda }}</td>
-                <td>{{ producto.tipo }}</td>
-                <td>{{ producto.talla }}</td>
-                <td>{{ producto.cantidad }}</td>
-                {% load humanize %}
-                <td>{{ producto.precio_unidad|intcomma }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
+    <table border="1">
+        <tr>
+            <th>Sede</th>
+            <th>Código de Prenda</th>
+            <th>Tipo</th>
+            <th>Talla</th>
+            <th>Cantidad</th>
+            <th>Precio por Unidad</th>
+        </tr>
+        {% for producto in inventario %}
+        <tr class="{% if producto.cantidad < 30 %}low-stock-text{% endif %}">
+            <td>{{ producto.sede }}</td>
+            <td>{{ producto.codigo_prenda }}</td>
+            <td>{{ producto.tipo }}</td>
+            <td>{{ producto.talla }}</td>
+            <td>{{ producto.cantidad }}</td>
+            {% load humanize %}
+            <td>{{ producto.precio_unidad|intcomma }}</td>
+        </tr>
+        {% endfor %}
+        
     </table>
 
     <!-- Pie de página -->

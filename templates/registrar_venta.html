@@ -182,17 +182,17 @@
 <body>
     <h1>Registrar Venta</h1>
 
-<!-- Bloque para mostrar mensajes -->
-{% if messages %}
-    <div class="messages">
-        {% for message in messages %}
-        <div class="alert {{ message.tags }}" 
-            style="color: {% if 'error' in message.tags %}red{% elif 'success' in message.tags %}green{% else %}black{% endif %};">
-            {{ message }}
+    <!-- Bloque para mostrar mensajes -->
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert {{ message.tags }}" 
+                style="color: {% if 'error' in message.tags %}red{% elif 'success' in message.tags %}green{% else %}black{% endif %};">
+                {{ message }}
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-    </div>
-{% endif %}
+    {% endif %}
 
 
     <form id="ventaForm" action="{% url 'registrar_venta' %}" method="post">
@@ -225,7 +225,7 @@
                 <td id="codigoPrenda"></td>
                 <td id="precioUnitario"></td>
                 <td id="cantidadInventario"></td>
-                <td id="totalPagar|intcomma"></td>
+                <td id="totalPagar"></td>
             </tr>
         </tbody>
     </table>

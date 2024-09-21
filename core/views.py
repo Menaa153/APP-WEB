@@ -287,14 +287,14 @@ def registrar_venta(request):
             else:
                 # Si no hay suficiente inventario, mostramos un mensaje de error
                 messages.error(request, 'No hay suficiente cantidad en inventario')
-                """
+                
                 #PARAMETROS PARA ENVIAR CORREO A LA MODISTA
                 subject = f"CANTIDAD DE INVENTARIO INSUFICIENTE EN: {prenda.sede}"
                 message = f"En la sede {prenda.sede} se ha intentado vender {cantidad} prendas del producto ({prenda.codigo_prenda} - {prenda.tipo}, talla {prenda.talla}), se debe enviar a este punto de venta la candtidad de {(cantidad-prenda.cantidad)+10} prendas."
                 email_from = settings.EMAIL_HOST_USER
                 recipient_list = ['jdesneidermena15@gmail.com']
                 send_mail(subject, message, email_from, recipient_list)
-                """
+                
 
         except Inventario.DoesNotExist:
             # Si la prenda no existe, mostramos un mensaje de error
@@ -303,15 +303,6 @@ def registrar_venta(request):
     return render(request, 'registrar_venta.html')
 
 
-
-
-# Vista para el autocompletado del código de prenda
-
-def autocomplete_codigo_prenda(request):
-    if 'term' in request.GET:
-        qs = Inventario.objects.filter(codigo_prenda__icontains=request.GET.get('term'))
-        codes = list(qs.values_list('codigo_prenda', flat=True))
-        return JsonResponse(codes, safe=False)
 
 
 # Vista para previsualizar la venta
@@ -491,7 +482,7 @@ def gestionar_cliente(request):
                         if form.is_valid():
                             form.save()
                     messages.success(request, "Clientes actualizados exitosamente.")
-                    return redirect('gestionar_cliente')
+                    return redirect('gestionar_cliente2')
                 else:
                     messages.error(request, "No se encontraron clientes para actualizar.")
         else:
@@ -507,6 +498,8 @@ def gestionar_cliente(request):
             if clientes.exists():
                 #mostrar solo el primer registro para el formulario
                 form = CuentaCobroForm(instance=clientes.first())
+            else:
+                messages.error(request, "NIT no encontrado")
                 
     return render(request, 'gestionar_cliente.html', {
         'clientes': clientes,
@@ -516,44 +509,46 @@ def gestionar_cliente(request):
 
 
 def eliminar_cliente(request):
-    clientes = []  # Inicializa la variable clientes
-    form = None
-    error = None
-    
-    if request.method == 'POST':
-        nit = request.POST.get('nit')
-        action = request.POST.get('action')  # edit or delete
+        clientes = []  # Inicializa la variable clientes
+        form = None
+        error = None
         
-        if nit:
-            clientes = Cliente.objects.filter(nit=nit)
+        if request.method == 'POST':
+            nit = request.POST.get('nit')
+            action = request.POST.get('action')  # edit or delete
             
-            if action == 'delete':
-                if clientes.exists():
-                    clientes.delete()
-                    messages.success(request, "Clientes eliminados exitosamente.")
-                    return redirect('eliminar_cliente')
-                else:
-                    messages.error(request, "No se encontraron clientes para eliminar.")
-                    
-        else:
-            messages.error(request, "NIT no encontrado")
-            return render(request, 'eliminar_cliente.html')
-            
-            
-            
-    if request.method == 'GET':
-        nit = request.GET.get('nit')
-        if nit:
-            clientes = Cliente.objects.filter(nit=nit)
-            if clientes.exists():
-                #mostrar solo el primer registro para el formulario
-                form = CuentaCobroForm(instance=clientes.first())
+            if nit:
+                clientes = Cliente.objects.filter(nit=nit)
                 
-    return render(request, 'eliminar_cliente.html', {
-        'clientes': clientes,
-        'form': form,
-        'error': error,
-    })
+                if action == 'delete':
+                    if clientes.exists():
+                        clientes.delete()
+                        messages.success(request, "Cliente eliminado exitosamente.")
+                        return redirect('eliminar_cliente')
+                    else:
+                        messages.error(request, "No se encontró cliente para eliminar.")
+                        
+            else:
+                messages.error(request, "NIT no encontrado")
+                return render(request, 'eliminar_cliente.html')
+                
+                
+                
+        if request.method == 'GET':
+            nit = request.GET.get('nit')
+            if nit:
+                clientes = Cliente.objects.filter(nit=nit)
+                if clientes.exists():
+                    #mostrar solo el primer registro para el formulario
+                    form = CuentaCobroForm(instance=clientes.first())
+                else:
+                    messages.error(request, "NIT no encontrado.")
+                    
+        return render(request, 'eliminar_cliente.html', {
+            'clientes': clientes,
+            'form': form,
+            'error': error,
+        })
 
 
 
@@ -579,6 +574,7 @@ def buscar_cliente(request):
         else:
             messages.error(request, "Por favor, ingresa un NIT.")
             return render(request, 'buscar_cliente.html')
+    
     return render(request, 'buscar_cliente.html')
 
 
@@ -823,3 +819,23 @@ def generar_reporte2(request):
 
 def generar_reporteg(request):
     return render(request, 'generar_reporteg.html')
+
+
+
+def HistoricoVentas(request):
+    # Obtener la sede de la vendedora que está logueada
+    sede_vendedora = request.user.last_name
+    
+    if sede_vendedora:
+        if sede_vendedora == 'MODISTA JEFE':
+            ventas = HistorialVentas.objects.all()
+            titulo = 'de todas las sedes'
+            return render(request, 'historicoVentas.html', {'ventas': ventas, 'titulo': titulo})
+        
+        else:
+            # Filtrar las ventas por sede
+            ventas = HistorialVentas.objects.filter(sede=sede_vendedora)
+            titulo = f"- Sede {sede_vendedora}"
+            
+            # Pasar las ventas al template
+            return render(request, 'historicoVentas.html', {'ventas': ventas, 'titulo': titulo})

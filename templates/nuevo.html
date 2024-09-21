@@ -15,31 +15,65 @@
             flex-direction: column;
             align-items: center;
         }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
         h2, p { color: #333; }
         form, table {
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 600px;
             margin-bottom: 20px;
         }
-        label, input, button { display: block; width: 100%; margin-bottom: 15px; }
+        label, input { display: block; width: 100%; margin-bottom: 15px; }
         table, th, td { border: 1px solid #ddd; padding: 10px; }
         .total-row { font-weight: bold; background-color: #f2f2f2; }
+        
+        .row {
+        display: flex;
+        white-space: nowrap;
+        gap: 20px;
+        justify-content: space-between; /* Ajusta el espacio entre los elementos */
+        margin-bottom: 16px; /* Espacio entre las filas */
+        }
+
+        .row p {
+        margin: 10%;
+        flex-basis: 45%; /* Cada párrafo ocupa el 45% del ancho de la fila */
+        margin: 0;
+        }
+
+
     </style>
 </head>
 <body>
-    <a href="{% url 'home' %}"><button class="back-button">Volver al Inicio</button></a>
     
-    <!-- Datos del Cliente -->
-    <h2>Datos del cliente</h2>
-    <p><strong>Institución:</strong> {{ cuenta_cobro.institucion }}</p>
-    <p><strong>NIT:</strong> {{ cuenta_cobro.nit }}</p>
-    <p><strong>Dirección:</strong> {{ cuenta_cobro.direccion }}</p>
-    <p><strong>Municipio:</strong> {{ cuenta_cobro.municipio }}</p>
-    <p><strong>Departamento:</strong> {{ cuenta_cobro.departamento }}</p>
+<!-- Datos del Cliente -->
+<h2>Datos del cliente</h2>
+
+    <div class="row">
+        <p><strong>Institución:</strong> {{ cuenta_cobro.institucion }}</p>
+        <p><strong>NIT:</strong> {{ cuenta_cobro.nit }}</p>
+    </div>
+    
+    <div class="row">
+        <p><strong>Dirección:</strong> {{ cuenta_cobro.direccion }}</p>
+        <p><strong>Municipio:</strong> {{ cuenta_cobro.municipio }}</p>
+        <p><strong>Departamento:</strong> {{ cuenta_cobro.departamento }}</p>
+    </div>
 
     <!-- Formulario para agregar productos -->
     <h2>Datos del Pedido</h2>
@@ -88,11 +122,11 @@
             {% endfor %}
             <tr class="total-row">
                 <td colspan="5" style="text-align: right;"><strong>Total a Pagar:</strong></td>
-                <td>{{ total_a_pagar }}</td>
+                <td>{{ total_a_pagar|intcomma }}</td>
             </tr>
         </table>
 
-        <button type="submit">Modificar Producto</button>
+        <button class="button" type="submit">Modificar Producto</button>
     </form>
 
     <!-- Formulario para generar cuenta de cobro -->
@@ -103,6 +137,8 @@
         <input type="text" id="concepto" name="concepto" required>
 
         <button type="submit">Generar Cuenta de Cobro</button>
+        
     </form>
+    <a href="{% url 'home' %}"><button class="button">Volver al Inicio</button></a>
 </body>
 </html>

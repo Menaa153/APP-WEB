@@ -3,7 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <title>Datos del Pedido</title>
+
+    <script>
+        $(document).ready(function() {
+            // Autocompletado para código de prenda
+            $("#codigo_producto").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "{% url 'autocomplete_codigo_prenda' %}",
+                        data: {
+                            'term': request.term
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            response(data);
+                        }
+                    });
+                },
+                minLength: 2,  // Número mínimo de caracteres para empezar a autocompletar
+            });
+        });
+    </script>
+    
     <style>
         /* Estilos generales */
         body {
